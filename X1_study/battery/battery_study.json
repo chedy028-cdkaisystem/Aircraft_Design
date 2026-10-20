@@ -1,0 +1,521 @@
+{
+ "assumptions": {
+  "mtow": 11340,
+  "E_inst": 360.0,
+  "V_nom": 720,
+  "P_peak": 1600000.0,
+  "Sw": 60.6,
+  "span": 32.3,
+  "cr": 2.5,
+  "ct": 1.25,
+  "V_cr": 80.0,
+  "h_cr": 3000.0,
+  "eta": 0.707,
+  "soc_window": 0.9,
+  "taxi_kW": 60,
+  "taxi_min": 10,
+  "to_kW": 1600,
+  "to_s": 60,
+  "climb_P": 1200000.0,
+  "desc_frac": 0.15,
+  "loiter_frac": 0.8,
+  "cell_Whkg": 250,
+  "ctp": 0.7
+ },
+ "task1_360kWh": {
+  "LD21_none": {
+   "range_km": 105.695133550532,
+   "climb_kWh": 259.6409245092847,
+   "climb_min": 12.982046225464234,
+   "roc_fpm": 758.162452132852,
+   "descent_kWh": 17.982687411598306,
+   "reserve_kWh": 0.0,
+   "cruise_kWh": 9.709721412450367,
+   "Pcruise_kW": 599.4229137199435
+  },
+  "LD21_30min": {
+   "range_km": null,
+   "climb_kWh": 259.6409245092847,
+   "climb_min": 12.982046225464234,
+   "roc_fpm": 758.162452132852,
+   "descent_kWh": 17.982687411598306,
+   "reserve_kWh": 239.7691654879774,
+   "cruise_kWh": -230.05944407552704,
+   "Pcruise_kW": 599.4229137199435
+  },
+  "LD21_20min+50km": {
+   "range_km": null,
+   "climb_kWh": 259.6409245092847,
+   "climb_min": 12.982046225464234,
+   "roc_fpm": 758.162452132852,
+   "descent_kWh": 17.982687411598306,
+   "reserve_kWh": 263.91258840169735,
+   "cruise_kWh": -254.20286698924698,
+   "Pcruise_kW": 599.4229137199435
+  },
+  "LD18_none": {
+   "range_km": null,
+   "climb_kWh": 292.9990030378998,
+   "climb_min": 14.64995015189499,
+   "roc_fpm": 671.8452894344395,
+   "descent_kWh": 17.982687411598302,
+   "reserve_kWh": 0.0,
+   "cruise_kWh": -23.648357116164767,
+   "Pcruise_kW": 699.3267326732673
+  },
+  "LD18_30min": {
+   "range_km": null,
+   "climb_kWh": 292.9990030378998,
+   "climb_min": 14.64995015189499,
+   "roc_fpm": 671.8452894344395,
+   "descent_kWh": 17.982687411598302,
+   "reserve_kWh": 279.73069306930694,
+   "cruise_kWh": -303.3790501854717,
+   "Pcruise_kW": 699.3267326732673
+  },
+  "LD18_20min+50km": {
+   "range_km": null,
+   "climb_kWh": 292.9990030378998,
+   "climb_min": 14.64995015189499,
+   "roc_fpm": 671.8452894344395,
+   "descent_kWh": 17.982687411598302,
+   "reserve_kWh": 307.89801980198024,
+   "cruise_kWh": -331.54637691814503,
+   "Pcruise_kW": 699.3267326732673
+  },
+  "LD16_none": {
+   "range_km": null,
+   "climb_kWh": 330.10922903668495,
+   "climb_min": 16.505461451834247,
+   "roc_fpm": 596.3177720733282,
+   "descent_kWh": 17.982687411598302,
+   "reserve_kWh": 0.0,
+   "cruise_kWh": -60.75858311494993,
+   "Pcruise_kW": 786.7425742574258
+  },
+  "LD16_30min": {
+   "range_km": null,
+   "climb_kWh": 330.10922903668495,
+   "climb_min": 16.505461451834247,
+   "roc_fpm": 596.3177720733282,
+   "descent_kWh": 17.982687411598302,
+   "reserve_kWh": 314.6970297029703,
+   "cruise_kWh": -375.45561281792027,
+   "Pcruise_kW": 786.7425742574258
+  },
+  "LD16_20min+50km": {
+   "range_km": null,
+   "climb_kWh": 330.10922903668495,
+   "climb_min": 16.505461451834247,
+   "roc_fpm": 596.3177720733282,
+   "descent_kWh": 17.982687411598302,
+   "reserve_kWh": 346.3852722772277,
+   "cruise_kWh": -407.1438553921776,
+   "Pcruise_kW": 786.7425742574258
+  }
+ },
+ "baseline_pack": {
+  "pack_Whkg": 175.0,
+  "pack_mass_kg": 2057.1428571428573,
+  "nonbattery_mass_kg": 9282.857142857143
+ },
+ "task1_required": {
+  "100km_LD21_none": {
+   "E_fixedMTOW_kWh": 349.21142065283294,
+   "extra_pack_kg_fixedMTOW": -61.649024840954624,
+   "E_grown_kWh": 344.21875716395965,
+   "MTOW_grown_kg": 11227.276836885427
+  },
+  "100km_LD21_30min": {
+   "E_fixedMTOW_kWh": 615.6216045283634,
+   "extra_pack_kg_fixedMTOW": 1460.6948830192193,
+   "E_grown_kWh": 1005.0942864530679,
+   "MTOW_grown_kg": 15947.81633180763
+  },
+  "100km_LD21_20min+50km": {
+   "E_fixedMTOW_kWh": 642.4476299880522,
+   "extra_pack_kg_fixedMTOW": 1613.986457074584,
+   "E_grown_kWh": 1814.1617701799107,
+   "MTOW_grown_kg": 21726.869786999367
+  },
+  "100km_LD18_none": {
+   "E_fixedMTOW_kWh": 386.2759523512943,
+   "extra_pack_kg_fixedMTOW": 150.14829915025302,
+   "E_grown_kWh": 404.701075439287,
+   "MTOW_grown_kg": 11659.293395994908
+  },
+  "100km_LD18_30min": {
+   "E_fixedMTOW_kWh": 697.087833539413,
+   "extra_pack_kg_fixedMTOW": 1926.2161916537889,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "100km_LD18_20min+50km": {
+   "E_fixedMTOW_kWh": 728.3848632423835,
+   "extra_pack_kg_fixedMTOW": 2105.0563613850486,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "100km_LD16_none": {
+   "E_fixedMTOW_kWh": 427.50953679438885,
+   "extra_pack_kg_fixedMTOW": 385.768781682222,
+   "E_grown_kWh": 516.9055699640952,
+   "MTOW_grown_kg": 12460.754071172109
+  },
+  "100km_LD16_30min": {
+   "E_fixedMTOW_kWh": 777.1729031310225,
+   "extra_pack_kg_fixedMTOW": 2383.8451607487,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "100km_LD16_20min+50km": {
+   "E_fixedMTOW_kWh": 812.3820615468642,
+   "extra_pack_kg_fixedMTOW": 2585.0403516963665,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "150km_LD21_none": {
+   "E_fixedMTOW_kWh": 462.4589202897881,
+   "extra_pack_kg_fixedMTOW": 585.479544513075,
+   "E_grown_kWh": 499.5199573393731,
+   "MTOW_grown_kg": 12336.571123852666
+  },
+  "150km_LD21_30min": {
+   "E_fixedMTOW_kWh": 728.8691041653185,
+   "extra_pack_kg_fixedMTOW": 2107.8234523732485,
+   "E_grown_kWh": 1011.0673221475779,
+   "MTOW_grown_kg": 15990.480872482698
+  },
+  "150km_LD21_20min+50km": {
+   "E_fixedMTOW_kWh": 755.6951296250074,
+   "extra_pack_kg_fixedMTOW": 2261.115026428614,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "150km_LD18_none": {
+   "E_fixedMTOW_kWh": 520.2736303322209,
+   "extra_pack_kg_fixedMTOW": 915.8493161841196,
+   "E_grown_kWh": 589.6344807325105,
+   "MTOW_grown_kg": 12980.246290946503
+  },
+  "150km_LD18_30min": {
+   "E_fixedMTOW_kWh": 831.0855115203399,
+   "extra_pack_kg_fixedMTOW": 2691.9172086876565,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "150km_LD18_20min+50km": {
+   "E_fixedMTOW_kWh": 862.3825412233101,
+   "extra_pack_kg_fixedMTOW": 2870.757378418915,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "150km_LD16_none": {
+   "E_fixedMTOW_kWh": 570.8615016193496,
+   "extra_pack_kg_fixedMTOW": 1204.9228663962836,
+   "E_grown_kWh": 676.5676521924144,
+   "MTOW_grown_kg": 13601.197515660104
+  },
+  "150km_LD16_30min": {
+   "E_fixedMTOW_kWh": 920.5248679559834,
+   "extra_pack_kg_fixedMTOW": 3202.9992454627622,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "150km_LD16_20min+50km": {
+   "E_fixedMTOW_kWh": 955.7340263718248,
+   "extra_pack_kg_fixedMTOW": 3404.1944364104274,
+   "E_grown_kWh": 1766.152094635947,
+   "MTOW_grown_kg": 21383.943533113907
+  },
+  "200km_LD21_none": {
+   "E_fixedMTOW_kWh": 578.0883403746537,
+   "extra_pack_kg_fixedMTOW": 1246.2190878551644,
+   "E_grown_kWh": 689.6703240650651,
+   "MTOW_grown_kg": 13694.788029036179
+  },
+  "200km_LD21_30min": {
+   "E_fixedMTOW_kWh": 844.4985242501841,
+   "extra_pack_kg_fixedMTOW": 2768.562995715338,
+   "E_grown_kWh": 1341.3070040338382,
+   "MTOW_grown_kg": 18349.335743098844
+  },
+  "200km_LD21_20min+50km": {
+   "E_fixedMTOW_kWh": 871.3245497098729,
+   "extra_pack_kg_fixedMTOW": 2921.8545697707023,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "200km_LD18_none": {
+   "E_fixedMTOW_kWh": 655.1746204312308,
+   "extra_pack_kg_fixedMTOW": 1686.7121167498901,
+   "E_grown_kWh": 841.5408362629605,
+   "MTOW_grown_kg": 14779.57740187829
+  },
+  "200km_LD18_30min": {
+   "E_fixedMTOW_kWh": 965.9865016193497,
+   "extra_pack_kg_fixedMTOW": 3462.7800092534267,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "200km_LD18_20min+50km": {
+   "E_fixedMTOW_kWh": 997.28353132232,
+   "extra_pack_kg_fixedMTOW": 3641.6201789846855,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "200km_LD16_none": {
+   "E_fixedMTOW_kWh": 722.6251154807359,
+   "extra_pack_kg_fixedMTOW": 2072.1435170327763,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "200km_LD16_30min": {
+   "E_fixedMTOW_kWh": 1072.2884818173695,
+   "extra_pack_kg_fixedMTOW": 4070.2198960992546,
+   "E_grown_kWh": null,
+   "MTOW_grown_kg": null
+  },
+  "200km_LD16_20min+50km": {
+   "E_fixedMTOW_kWh": 1107.497640233211,
+   "extra_pack_kg_fixedMTOW": 4271.41508704692,
+   "E_grown_kWh": 2638.4735945082475,
+   "MTOW_grown_kg": 27614.811389344624
+  }
+ },
+ "power": {
+  "C_rate_peak_360": 4.444444444444445,
+  "C_rate_cruise_LD18": 1.9425742574257427,
+  "I_peak_A": 2222.222222222222,
+  "I_peak_per_pack_A": 555.5555555555555
+ },
+ "task2_cells": {
+  "21700 (NMC/NCA, ~5 Ah)": {
+   "series": 200,
+   "parallel_per_pack": 25,
+   "cells_total": 20000,
+   "E_kWh": 360.0,
+   "cell_Whkg": 257.1428571428571,
+   "cell_mass_kg": 1400.0000000000002,
+   "pack_mass_kg_ctp0p65": 2153.8461538461543,
+   "pack_mass_kg_ctp0p8": 1750.0000000000002,
+   "cell_vol_m3": 0.486,
+   "pack_vol_m3_ctv0p5": 0.972,
+   "peak_C": 4.444444444444445
+  },
+  "4680 (~24 Ah)": {
+   "series": 200,
+   "parallel_per_pack": 6,
+   "cells_total": 4800,
+   "E_kWh": 414.72,
+   "cell_Whkg": 243.38028169014086,
+   "cell_mass_kg": 1704.0,
+   "pack_mass_kg_ctp0p65": 2621.5384615384614,
+   "pack_mass_kg_ctp0p8": 2130.0,
+   "cell_vol_m3": 0.6384000000000001,
+   "pack_vol_m3_ctv0p5": 1.2768000000000002,
+   "peak_C": 3.858024691358025
+  },
+  "prismatic NMC ~100 Ah": {
+   "series": 197,
+   "parallel_per_pack": 2,
+   "cells_total": 1576,
+   "E_kWh": 575.24,
+   "cell_Whkg": 251.72413793103448,
+   "cell_mass_kg": 2285.2,
+   "pack_mass_kg_ctp0p65": 3515.692307692307,
+   "pack_mass_kg_ctp0p8": 2856.4999999999995,
+   "cell_vol_m3": 0.97712,
+   "pack_vol_m3_ctv0p5": 1.95424,
+   "peak_C": 2.781447743550518
+  },
+  "pouch Si-anode 4.3 Ah (Amprius SA102)": {
+   "series": 212,
+   "parallel_per_pack": 30,
+   "cells_total": 25440,
+   "E_kWh": 371.9328,
+   "cell_Whkg": 441.6918429003021,
+   "cell_mass_kg": 842.064,
+   "pack_mass_kg_ctp0p65": 1295.4830769230769,
+   "pack_mass_kg_ctp0p8": 1052.58,
+   "cell_vol_m3": 0.3915082105263158,
+   "pack_vol_m3_ctv0p5": 0.7830164210526316,
+   "peak_C": 4.301852377633809
+  }
+ },
+ "task2_wing": {
+  "box_volume_m3": 6.361595646407766,
+  "cells_4680": 24163,
+  "E_4680_kWh": 2087.7306168743994,
+  "cells_21700": 133212,
+  "E_21700_kWh": 2397.82316892218,
+  "frac_of_360": 5.799251713539999,
+  "root_box_w_m": 1.2030075187969924,
+  "root_box_h_m": 0.34151845779863194,
+  "V_ult_root_kN": 208.585125,
+  "V_ult_inboard_of_strut_kN": 93.86330625000001,
+  "tau_core_avg_MPa_unbraced": 0.5076925747260287,
+  "tau_core_avg_MPa_braced": 0.22846165862671294
+ },
+ "task3": {
+  "E_req_200km_LD18_30min_kWh": 965.9865016193497,
+  "table": {
+   "LFP": {
+    "cell_Whkg": 170,
+    "cell_WhL": 380,
+    "pack_Whkg": 118.99999999999999,
+    "mass_for_360_kg": 3025.210084033614,
+    "vol_for_360_m3": 1.894736842105263,
+    "mass_for_200km_req_kg": 8117.53362705336,
+    "vol_for_200km_req_m3": 5.084139482207104,
+    "E_at_fixed_pack_mass_kWh": 244.8,
+    "range_LD18_30min_km": null,
+    "range_LD18_none_km": null,
+    "range_alt1500_LD18_none_km": 61.76541013143281,
+    "range_alt1500_LD18_30min_km": null
+   },
+   "NMC (811/622)": {
+    "cell_Whkg": 260,
+    "cell_WhL": 650,
+    "pack_Whkg": 182.0,
+    "mass_for_360_kg": 1978.021978021978,
+    "vol_for_360_m3": 1.1076923076923078,
+    "mass_for_200km_req_kg": 5307.618140765658,
+    "vol_for_200km_req_m3": 2.972266158828768,
+    "E_at_fixed_pack_mass_kWh": 374.40000000000003,
+    "range_LD18_30min_km": null,
+    "range_LD18_none_km": null,
+    "range_alt1500_LD18_none_km": 109.80063948923099,
+    "range_alt1500_LD18_30min_km": null
+   },
+   "NCA": {
+    "cell_Whkg": 270,
+    "cell_WhL": 700,
+    "pack_Whkg": 189.0,
+    "mass_for_360_kg": 1904.7619047619048,
+    "vol_for_360_m3": 1.0285714285714285,
+    "mass_for_200km_req_kg": 5111.0396911076705,
+    "vol_for_200km_req_m3": 2.759961433198142,
+    "E_at_fixed_pack_mass_kWh": 388.80000000000007,
+    "range_LD18_30min_km": null,
+    "range_LD18_none_km": 101.27032417044292,
+    "range_alt1500_LD18_none_km": 115.13788719565301,
+    "range_alt1500_LD18_30min_km": null
+   },
+   "Si-anode Li-ion (Amprius 450)": {
+    "cell_Whkg": 450,
+    "cell_WhL": 950,
+    "pack_Whkg": 315.0,
+    "mass_for_360_kg": 1142.857142857143,
+    "vol_for_360_m3": 0.7578947368421053,
+    "mass_for_200km_req_kg": 3066.6238146646024,
+    "vol_for_200km_req_m3": 2.0336557928828416,
+    "E_at_fixed_pack_mass_kWh": 648.0000000000001,
+    "range_LD18_30min_km": null,
+    "range_LD18_none_km": 197.34078288603928,
+    "range_alt1500_LD18_none_km": 211.20834591124932,
+    "range_alt1500_LD18_30min_km": 96.00834591124934
+   },
+   "Li-S (Lyten 2026)": {
+    "cell_Whkg": 330,
+    "cell_WhL": 500,
+    "pack_Whkg": 230.99999999999997,
+    "mass_for_360_kg": 1558.4415584415585,
+    "vol_for_360_m3": 1.44,
+    "mass_for_200km_req_kg": 4181.759747269913,
+    "vol_for_200km_req_m3": 3.863946006477399,
+    "E_at_fixed_pack_mass_kWh": 475.2,
+    "range_LD18_30min_km": null,
+    "range_LD18_none_km": 133.293810408975,
+    "range_alt1500_LD18_none_km": 147.16137343418507,
+    "range_alt1500_LD18_30min_km": null
+   },
+   "Solid-state Li-metal (QSE-5)": {
+    "cell_Whkg": 301,
+    "cell_WhL": 844,
+    "pack_Whkg": 225.75,
+    "mass_for_360_kg": 1594.6843853820599,
+    "vol_for_360_m3": 0.8530805687203792,
+    "mass_for_200km_req_kg": 4279.009973950608,
+    "vol_for_200km_req_m3": 2.289067539382345,
+    "E_at_fixed_pack_mass_kWh": 464.40000000000003,
+    "range_LD18_30min_km": null,
+    "range_LD18_none_km": 129.2908746291585,
+    "range_alt1500_LD18_none_km": 143.1584376543686,
+    "range_alt1500_LD18_30min_km": null
+   }
+  }
+ },
+ "alt1500": {
+  "LD21_none": {
+   "range_km": 121.87395707994376,
+   "climb_kWh": 129.82046225464234,
+   "climb_min": 6.491023112732117,
+   "roc_fpm": 758.162452132852,
+   "descent_kWh": 8.991343705799153,
+   "reserve_kWh": 0.0,
+   "cruise_kWh": 148.52152737289188,
+   "Pcruise_kW": 599.4229137199435
+  },
+  "LD21_30min": {
+   "range_km": null,
+   "climb_kWh": 129.82046225464234,
+   "climb_min": 6.491023112732117,
+   "roc_fpm": 758.162452132852,
+   "descent_kWh": 8.991343705799153,
+   "reserve_kWh": 239.7691654879774,
+   "cruise_kWh": -91.24763811508554,
+   "Pcruise_kW": 599.4229137199435
+  },
+  "LD18_none": {
+   "range_km": 104.46339178280893,
+   "climb_kWh": 146.4995015189499,
+   "climb_min": 7.324975075947495,
+   "roc_fpm": 671.8452894344395,
+   "descent_kWh": 8.991343705799151,
+   "reserve_kWh": 0.0,
+   "cruise_kWh": 131.8424881085843,
+   "Pcruise_kW": 699.3267326732673
+  },
+  "LD18_30min": {
+   "range_km": null,
+   "climb_kWh": 146.4995015189499,
+   "climb_min": 7.324975075947495,
+   "roc_fpm": 671.8452894344395,
+   "descent_kWh": 8.991343705799151,
+   "reserve_kWh": 279.73069306930694,
+   "cruise_kWh": -147.88820496072265,
+   "Pcruise_kW": 699.3267326732673
+  },
+  "LD16_none": {
+   "range_km": 92.85634825138571,
+   "climb_kWh": 165.05461451834248,
+   "climb_min": 8.252730725917123,
+   "roc_fpm": 596.3177720733282,
+   "descent_kWh": 8.991343705799151,
+   "reserve_kWh": 0.0,
+   "cruise_kWh": 113.2873751091917,
+   "Pcruise_kW": 786.7425742574258
+  },
+  "LD16_30min": {
+   "range_km": null,
+   "climb_kWh": 165.05461451834248,
+   "climb_min": 8.252730725917123,
+   "roc_fpm": 596.3177720733282,
+   "descent_kWh": 8.991343705799151,
+   "reserve_kWh": 314.6970297029703,
+   "cruise_kWh": -201.4096545937786,
+   "Pcruise_kW": 786.7425742574258
+  }
+ },
+ "alt1500_req": {
+  "100km_LD21_none": 309.41454055769725,
+  "100km_LD21_30min": 575.8247244332277,
+  "100km_LD18_none": 347.95768058598577,
+  "100km_LD18_30min": 658.7695617741047,
+  "200km_LD21_none": 540.6733807274285,
+  "200km_LD21_30min": 807.0835646029591,
+  "200km_LD18_none": 617.7596607840056,
+  "200km_LD18_30min": 928.5715419721246
+ }
+}

@@ -1,0 +1,663 @@
+{
+ "assumptions": {
+  "MTOW": 11340,
+  "y0": 1.15,
+  "ys": 6.5,
+  "strut_angle_deg": 24.567171320601318,
+  "box": [
+   0.5,
+   0.144
+  ],
+  "FILL": 0.55,
+  "M_WING": 900.0,
+  "M_NAC": 200.0,
+  "Y_NAC": [
+   3.8,
+   7.8
+  ],
+  "KD": 0.25,
+  "PHI_B": 0.6,
+  "KT": 2.0,
+  "PEEL_RATIO": 0.75,
+  "G_CORE": [
+   100000000.0,
+   500000000.0
+  ],
+  "V_need_per_side_m3": 0.6449925485338476
+ },
+ "pack": {
+  "v_cells_m3": 0.5946623203036249,
+  "v_potting_m3": 0.11482948308360756,
+  "m_potting": 166.50275047123097,
+  "m_bms": 86.39999999999999,
+  "m_vent": 60.0,
+  "m_total": 1752.902750471231
+ },
+ "loads": {
+  "pinned|flight_+3.75g|fuselage": {
+   "zone": null,
+   "depth_frac": 0,
+   "R_strut_vert_kN": 197.26543572761483,
+   "strut_axial_kN": 474.4697649444344,
+   "V_root_kN": -39.18077727446185,
+   "M_root_kNm": -0.7040494203751441,
+   "M_max_inboard_kNm": 395.718979908876,
+   "M_max_outboard_kNm": 396.79717650366047,
+   "M_at_strut_kNm": 396.79717650366047
+  },
+  "pinned|flight_+3.75g|inboard_block": {
+   "zone": [
+    1.15,
+    2.77108072048032
+   ],
+   "depth_frac": 0.9957486554399633,
+   "R_strut_vert_kN": 192.46866516239467,
+   "strut_axial_kN": 462.93240365162796,
+   "V_root_kN": -66.41799514905011,
+   "M_root_kNm": -0.6869295254293829,
+   "M_max_inboard_kNm": 395.76697961433183,
+   "M_max_outboard_kNm": 396.79717650366047,
+   "M_at_strut_kNm": 396.79717650366047
+  },
+  "pinned|flight_+3.75g|inboard_spread": {
+   "zone": [
+    1.15,
+    6.5
+   ],
+   "depth_frac": 0.3434006219691412,
+   "R_strut_vert_kN": 182.17150915608778,
+   "strut_axial_kN": 438.165321816497,
+   "V_root_kN": -56.25741249182675,
+   "M_root_kNm": -0.6501785016577923,
+   "M_max_inboard_kNm": 395.8700198678973,
+   "M_max_outboard_kNm": 396.79717650366047,
+   "M_at_strut_kNm": 396.79717650366047
+  },
+  "pinned|flight_+3.75g|outboard": {
+   "zone": [
+    6.5,
+    16.15
+   ],
+   "depth_frac": 0.34593560654718464,
+   "R_strut_vert_kN": 140.32195101965723,
+   "strut_axial_kN": 337.50729250294603,
+   "V_root_kN": -14.47974753298446,
+   "M_root_kNm": -0.5008155023047002,
+   "M_max_inboard_kNm": 263.9307206786917,
+   "M_max_outboard_kNm": 264.7617421926742,
+   "M_at_strut_kNm": 264.7617421926742
+  },
+  "pinned|flight_+3.75g|full_span": {
+   "zone": [
+    1.15,
+    16.15
+   ],
+   "depth_frac": 0.17233172657305337,
+   "R_strut_vert_kN": 161.32367946328984,
+   "strut_axial_kN": 388.02138850421665,
+   "V_root_kN": -35.44539719681877,
+   "M_root_kNm": -0.5757716378435725,
+   "M_max_inboard_kNm": 330.1429689318638,
+   "M_max_outboard_kNm": 331.0222347717469,
+   "M_at_strut_kNm": 331.0222347717469
+  },
+  "pinned|flight_-1.5g|fuselage": {
+   "zone": null,
+   "depth_frac": 0,
+   "R_strut_vert_kN": -78.90617429104591,
+   "strut_axial_kN": -189.7879059777737,
+   "V_root_kN": 15.672310909784715,
+   "M_root_kNm": 0.28161976814997614,
+   "M_max_inboard_kNm": 158.28759196355043,
+   "M_max_outboard_kNm": 158.71887060146418,
+   "M_at_strut_kNm": -158.71887060146418
+  },
+  "pinned|flight_-1.5g|inboard_block": {
+   "zone": [
+    1.15,
+    2.77108072048032
+   ],
+   "depth_frac": 0.9957486554399633,
+   "R_strut_vert_kN": -76.98746606495786,
+   "strut_axial_kN": -185.17296146065115,
+   "V_root_kN": 26.567198059620026,
+   "M_root_kNm": 0.27477181017166,
+   "M_max_inboard_kNm": 158.30679184573276,
+   "M_max_outboard_kNm": 158.71887060146418,
+   "M_at_strut_kNm": -158.71887060146418
+  },
+  "pinned|flight_-1.5g|inboard_spread": {
+   "zone": [
+    1.15,
+    6.5
+   ],
+   "depth_frac": 0.3434006219691412,
+   "R_strut_vert_kN": -72.8686036624351,
+   "strut_axial_kN": -175.26612872659877,
+   "V_root_kN": 22.50296499673068,
+   "M_root_kNm": 0.2600714006630587,
+   "M_max_inboard_kNm": 158.34800794715892,
+   "M_max_outboard_kNm": 158.71887060146418,
+   "M_at_strut_kNm": -158.71887060146418
+  },
+  "pinned|flight_-1.5g|outboard": {
+   "zone": [
+    6.5,
+    16.15
+   ],
+   "depth_frac": 0.34593560654718464,
+   "R_strut_vert_kN": -56.12878040786289,
+   "strut_axial_kN": -135.00291700117842,
+   "V_root_kN": 5.791899013193786,
+   "M_root_kNm": 0.20032620092187425,
+   "M_max_inboard_kNm": 105.5722882714767,
+   "M_max_outboard_kNm": 105.90469687706968,
+   "M_at_strut_kNm": -105.90469687706968
+  },
+  "pinned|flight_-1.5g|full_span": {
+   "zone": [
+    1.15,
+    16.15
+   ],
+   "depth_frac": 0.17233172657305337,
+   "R_strut_vert_kN": -64.52947178531595,
+   "strut_axial_kN": -155.2085554016867,
+   "V_root_kN": 14.178158878727547,
+   "M_root_kNm": 0.23030865513769094,
+   "M_max_inboard_kNm": 132.0571875727455,
+   "M_max_outboard_kNm": 132.40889390869876,
+   "M_at_strut_kNm": -132.40889390869876
+  },
+  "pinned|landing_3.0g|fuselage": {
+   "zone": null,
+   "depth_frac": 0,
+   "R_strut_vert_kN": -26.85013141382487,
+   "strut_axial_kN": -64.58088054632913,
+   "V_root_kN": 1.8374331759580456,
+   "M_root_kNm": 0.09582935494590493,
+   "M_max_inboard_kNm": 41.188458816203,
+   "M_max_outboard_kNm": 41.32258248972136,
+   "M_at_strut_kNm": -41.32258248972136
+  },
+  "pinned|landing_3.0g|inboard_block": {
+   "zone": [
+    1.15,
+    2.77108072048032
+   ],
+   "depth_frac": 0.9957486554399633,
+   "R_strut_vert_kN": -30.687547866000994,
+   "strut_axial_kN": -73.81076958057433,
+   "V_root_kN": -19.95234112371256,
+   "M_root_kNm": 0.10952527090263903,
+   "M_max_inboard_kNm": 41.15005905183834,
+   "M_max_outboard_kNm": 41.32258248972136,
+   "M_at_strut_kNm": -41.32258248972136
+  },
+  "pinned|landing_3.0g|inboard_spread": {
+   "zone": [
+    1.15,
+    6.5
+   ],
+   "depth_frac": 0.3434006219691412,
+   "R_strut_vert_kN": -38.925272671046486,
+   "strut_axial_kN": -93.62443504867903,
+   "V_root_kN": -11.823874997933872,
+   "M_root_kNm": 0.13892608991994349,
+   "M_max_inboard_kNm": 41.06762684898599,
+   "M_max_outboard_kNm": 41.32258248972136,
+   "M_at_strut_kNm": -41.32258248972136
+  },
+  "pinned|landing_3.0g|outboard": {
+   "zone": [
+    6.5,
+    16.15
+   ],
+   "depth_frac": 0.34593560654718464,
+   "R_strut_vert_kN": -72.40491918019093,
+   "strut_axial_kN": -174.15085849951979,
+   "V_root_kN": 21.598256969139946,
+   "M_root_kNm": 0.25841648940215234,
+   "M_max_inboard_kNm": 146.61906620035046,
+   "M_max_outboard_kNm": 146.95092993851037,
+   "M_at_strut_kNm": -146.95092993851037
+  },
+  "pinned|landing_3.0g|full_span": {
+   "zone": [
+    1.15,
+    16.15
+   ],
+   "depth_frac": 0.17233172657305337,
+   "R_strut_vert_kN": -55.60353642528481,
+   "strut_axial_kN": -133.73958169850323,
+   "V_root_kN": 4.825737238072432,
+   "M_root_kNm": 0.19845158097075183,
+   "M_max_inboard_kNm": 93.64926759781281,
+   "M_max_outboard_kNm": 93.9425358752522,
+   "M_at_strut_kNm": -93.9425358752522
+  },
+  "clamped|flight_+3.75g|fuselage": {
+   "zone": null,
+   "depth_frac": 0,
+   "R_strut_vert_kN": 230.80764757796703,
+   "strut_axial_kN": 555.1466727547222,
+   "V_root_kN": -72.72298912481408,
+   "M_root_kNm": -180.27459651782434,
+   "M_max_inboard_kNm": 395.38333402645094,
+   "M_max_outboard_kNm": 396.79717650366047,
+   "M_at_strut_kNm": 396.79717650366047
+  },
+  "clamped|flight_+3.75g|inboard_block": {
+   "zone": [
+    1.15,
+    2.77108072048032
+   ],
+   "depth_frac": 0.9957486554399633,
+   "R_strut_vert_kN": 229.593477018501,
+   "strut_axial_kN": 552.2263070159023,
+   "V_root_kN": -103.54280700515645,
+   "M_root_kNm": -199.43717311799304,
+   "M_max_inboard_kNm": 395.3954838319159,
+   "M_max_outboard_kNm": 396.79717650366047,
+   "M_at_strut_kNm": 396.79717650366047
+  },
+  "clamped|flight_+3.75g|inboard_spread": {
+   "zone": [
+    1.15,
+    6.5
+   ],
+   "depth_frac": 0.3434006219691412,
+   "R_strut_vert_kN": 220.12442707424395,
+   "strut_axial_kN": 529.451015010351,
+   "V_root_kN": -94.21033040998292,
+   "M_root_kNm": -203.8337450748419,
+   "M_max_inboard_kNm": 395.4902375004708,
+   "M_max_outboard_kNm": 396.79717650366047,
+   "M_at_strut_kNm": 396.79717650366047
+  },
+  "clamped|flight_+3.75g|outboard": {
+   "zone": [
+    6.5,
+    16.15
+   ],
+   "depth_frac": 0.34593560654718464,
+   "R_strut_vert_kN": 159.7571986623105,
+   "strut_axial_kN": 384.25363377978067,
+   "V_root_kN": -33.91499517563771,
+   "M_root_kNm": -104.54875568395398,
+   "M_max_inboard_kNm": 263.73623854751105,
+   "M_max_outboard_kNm": 264.7617421926742,
+   "M_at_strut_kNm": 264.7617421926742
+  },
+  "clamped|flight_+3.75g|full_span": {
+   "zone": [
+    1.15,
+    16.15
+   ],
+   "depth_frac": 0.17233172657305337,
+   "R_strut_vert_kN": 190.05181094636518,
+   "strut_axial_kN": 457.1193008769083,
+   "V_root_kN": -64.17352867989412,
+   "M_root_kNm": -154.37380709593546,
+   "M_max_inboard_kNm": 329.8554959683907,
+   "M_max_outboard_kNm": 331.0222347717469,
+   "M_at_strut_kNm": 331.0222347717469
+  },
+  "clamped|flight_-1.5g|fuselage": {
+   "zone": null,
+   "depth_frac": 0,
+   "R_strut_vert_kN": -92.32305903118682,
+   "strut_axial_kN": -222.0586691018889,
+   "V_root_kN": 29.089195649925625,
+   "M_root_kNm": 72.10983860712976,
+   "M_max_inboard_kNm": 158.15333361058035,
+   "M_max_outboard_kNm": 158.71887060146418,
+   "M_at_strut_kNm": -158.71887060146418
+  },
+  "clamped|flight_-1.5g|inboard_block": {
+   "zone": [
+    1.15,
+    2.77108072048032
+   ],
+   "depth_frac": 0.9957486554399633,
+   "R_strut_vert_kN": -91.83739080740042,
+   "strut_axial_kN": -220.890522806361,
+   "V_root_kN": 41.417122802062586,
+   "M_root_kNm": 79.77486924719734,
+   "M_max_inboard_kNm": 158.15819353276638,
+   "M_max_outboard_kNm": 158.71887060146418,
+   "M_at_strut_kNm": -158.71887060146418
+  },
+  "clamped|flight_-1.5g|inboard_spread": {
+   "zone": [
+    1.15,
+    6.5
+   ],
+   "depth_frac": 0.3434006219691412,
+   "R_strut_vert_kN": -88.0497708296976,
+   "strut_axial_kN": -211.78040600414042,
+   "V_root_kN": 37.684132163993155,
+   "M_root_kNm": 81.53349802993681,
+   "M_max_inboard_kNm": 158.19609500018834,
+   "M_max_outboard_kNm": 158.71887060146418,
+   "M_at_strut_kNm": -158.71887060146418
+  },
+  "clamped|flight_-1.5g|outboard": {
+   "zone": [
+    6.5,
+    16.15
+   ],
+   "depth_frac": 0.34593560654718464,
+   "R_strut_vert_kN": -63.90287946492418,
+   "strut_axial_kN": -153.70145351191223,
+   "V_root_kN": 13.565998070255079,
+   "M_root_kNm": 41.81950227358154,
+   "M_max_inboard_kNm": 105.49449541900444,
+   "M_max_outboard_kNm": 105.90469687706968,
+   "M_at_strut_kNm": -105.90469687706968
+  },
+  "clamped|flight_-1.5g|full_span": {
+   "zone": [
+    1.15,
+    16.15
+   ],
+   "depth_frac": 0.17233172657305337,
+   "R_strut_vert_kN": -76.02072437854609,
+   "strut_axial_kN": -182.84772035076335,
+   "V_root_kN": 25.66941147195769,
+   "M_root_kNm": 61.749522838374425,
+   "M_max_inboard_kNm": 131.9421983873563,
+   "M_max_outboard_kNm": 132.40889390869876,
+   "M_at_strut_kNm": -132.40889390869876
+  },
+  "clamped|landing_3.0g|fuselage": {
+   "zone": null,
+   "depth_frac": 0,
+   "R_strut_vert_kN": -29.277126549528287,
+   "strut_axial_kN": -70.41837461776156,
+   "V_root_kN": 4.264428311661464,
+   "M_root_kNm": 13.088915388314767,
+   "M_max_inboard_kNm": 41.16417267408456,
+   "M_max_outboard_kNm": 41.32258248972136,
+   "M_at_strut_kNm": -41.32258248972136
+  },
+  "clamped|landing_3.0g|inboard_block": {
+   "zone": [
+    1.15,
+    2.77108072048032
+   ],
+   "depth_frac": 0.9957486554399633,
+   "R_strut_vert_kN": -30.24846299710108,
+   "strut_axial_kN": -72.75466720881738,
+   "V_root_kN": -20.391425992612476,
+   "M_root_kNm": -2.2411458918203717,
+   "M_max_inboard_kNm": 41.15445282971258,
+   "M_max_outboard_kNm": 41.32258248972136,
+   "M_at_strut_kNm": -41.32258248972136
+  },
+  "clamped|landing_3.0g|inboard_spread": {
+   "zone": [
+    1.15,
+    6.5
+   ],
+   "depth_frac": 0.3434006219691412,
+   "R_strut_vert_kN": -37.82370295250675,
+   "strut_axial_kN": -90.97490081325854,
+   "V_root_kN": -12.925444716473608,
+   "M_root_kNm": -5.7584034572991225,
+   "M_max_inboard_kNm": 41.07864989486863,
+   "M_max_outboard_kNm": 41.32258248972136,
+   "M_at_strut_kNm": -41.32258248972136
+  },
+  "clamped|landing_3.0g|outboard": {
+   "zone": [
+    6.5,
+    16.15
+   ],
+   "depth_frac": 0.34593560654718464,
+   "R_strut_vert_kN": -86.11748568205356,
+   "strut_axial_kN": -207.13280579771487,
+   "V_root_kN": 35.31082347100257,
+   "M_root_kNm": 73.66958805541107,
+   "M_max_inboard_kNm": 146.48184905723645,
+   "M_max_outboard_kNm": 146.95092993851037,
+   "M_at_strut_kNm": -146.95092993851037
+  },
+  "clamped|landing_3.0g|full_span": {
+   "zone": [
+    1.15,
+    16.15
+   ],
+   "depth_frac": 0.17233172657305337,
+   "R_strut_vert_kN": -61.881795854809745,
+   "strut_axial_kN": -148.84027212001263,
+   "V_root_kN": 11.103996667597368,
+   "M_root_kNm": 33.809546925825735,
+   "M_max_inboard_kNm": 93.58644312053272,
+   "M_max_outboard_kNm": 93.9425358752522,
+   "M_at_strut_kNm": -93.9425358752522
+  }
+ },
+ "sandwich": {
+  "pinned|inboard_block": {
+   "tau_avg_allcore_MPa": 0.15869461535624035,
+   "core_share_range": [
+    0.3009350677972362,
+    0.6827625966662414
+   ],
+   "tau_avg_shared_MPa": [
+    0.048644013017681946,
+    0.10925819275415574
+   ],
+   "tau_peak_allcore_MPa": 0.5289820511874679,
+   "peel_peak_allcore_MPa": 0.3967365383906009
+  },
+  "pinned|inboard_spread": {
+   "tau_avg_allcore_MPa": 0.3225521195849533,
+   "core_share_range": [
+    0.28762757726490695,
+    0.6684931486435743
+   ],
+   "tau_avg_shared_MPa": [
+    0.08645610048386303,
+    0.20861443785221556
+   ],
+   "tau_peak_allcore_MPa": 1.0751737319498444,
+   "peel_peak_allcore_MPa": 0.8063802989623833
+  },
+  "pinned|outboard": {
+   "tau_avg_allcore_MPa": 0.2082931476578839,
+   "core_share_range": [
+    0.22863365739951622,
+    0.595507871515653
+   ],
+   "tau_avg_shared_MPa": [
+    0.05372591225849383,
+    0.1322167306391646
+   ],
+   "tau_peak_allcore_MPa": 0.6943104921929464,
+   "peel_peak_allcore_MPa": 0.5207328691447097
+  },
+  "pinned|full_span": {
+   "tau_avg_allcore_MPa": 0.3058912047795592,
+   "core_share_range": [
+    0.24967482215150555,
+    0.6215392870246116
+   ],
+   "tau_avg_shared_MPa": [
+    0.08199034863445114,
+    0.19783879210323294
+   ],
+   "tau_peak_allcore_MPa": 1.0196373492651973,
+   "peel_peak_allcore_MPa": 0.7647280119488981
+  },
+  "clamped|inboard_block": {
+   "tau_avg_allcore_MPa": 0.25404706413945694,
+   "core_share_range": [
+    0.3009350677972362,
+    0.6827625966662414
+   ],
+   "tau_avg_shared_MPa": [
+    0.07583393085779093,
+    0.17196559915413942
+   ],
+   "tau_peak_allcore_MPa": 0.8468235471315232,
+   "peel_peak_allcore_MPa": 0.6351176603486424
+  },
+  "clamped|inboard_spread": {
+   "tau_avg_allcore_MPa": 0.45467608102710455,
+   "core_share_range": [
+    0.28762757726490695,
+    0.6684931486435743
+   ],
+   "tau_avg_shared_MPa": [
+    0.12187029184452505,
+    0.29406718880151667
+   ],
+   "tau_peak_allcore_MPa": 1.5155869367570154,
+   "peel_peak_allcore_MPa": 1.1366902025677614
+  },
+  "clamped|outboard": {
+   "tau_avg_allcore_MPa": 0.2082931476578839,
+   "core_share_range": [
+    0.22863365739951622,
+    0.595507871515653
+   ],
+   "tau_avg_shared_MPa": [
+    0.05372591225849383,
+    0.1322167306391646
+   ],
+   "tau_peak_allcore_MPa": 0.6943104921929464,
+   "peel_peak_allcore_MPa": 0.5207328691447097
+  },
+  "clamped|full_span": {
+   "tau_avg_allcore_MPa": 0.4059012894997936,
+   "core_share_range": [
+    0.24967482215150555,
+    0.6215392870246116
+   ],
+   "tau_avg_shared_MPa": [
+    0.1087968131062958,
+    0.2625215095205312
+   ],
+   "tau_peak_allcore_MPa": 1.3530042983326453,
+   "peel_peak_allcore_MPa": 1.0147532237494838
+  }
+ },
+ "adhesives_typical_MPa": {
+  "3M DP490 epoxy (Al, 23C)": 23.0,
+  "3M DP490 epoxy (Al, 82C)": 9.5,
+  "LOCTITE UK 2018 PU (Al/Al)": 10.0,
+  "LOCTITE UK 2018 PU (to PET cell film, PSA fails)": 2.0,
+  "LOCTITE TLB 9270APS PU TCA (Al)": 10.5,
+  "SikaForce-325 PU (cell-to-plate)": 10.0,
+  "CR EVPU4500 PU (Al-Al, after 85C/85%RH 1000h)": 15.0,
+  "Kisling 8792/8992 gap filler (ABS)": 0.5
+ },
+ "design_allowable_MPa": {
+  "3M DP490 epoxy (Al, 23C)": 5.75,
+  "3M DP490 epoxy (Al, 82C)": 2.375,
+  "LOCTITE UK 2018 PU (Al/Al)": 2.5,
+  "LOCTITE UK 2018 PU (to PET cell film, PSA fails)": 0.5,
+  "LOCTITE TLB 9270APS PU TCA (Al)": 2.625,
+  "SikaForce-325 PU (cell-to-plate)": 2.5,
+  "CR EVPU4500 PU (Al-Al, after 85C/85%RH 1000h)": 3.75,
+  "Kisling 8792/8992 gap filler (ABS)": 0.125
+ },
+ "crash": {
+  "n_fwd": 9.0,
+  "n_up": 3.0,
+  "n_down": 6.0,
+  "tensile_on_endcap_kPa": 18.859680240386094
+ },
+ "brazier_kPa": {
+  "root_h0.36": 25.0,
+  "root_h0.29": 31.298449612403108,
+  "root_h0.23": 39.77832512315271
+ },
+ "thermal": {
+  "losses": {
+   "cruise_kW": 17.729410124111,
+   "takeoff_kW": 128.0,
+   "climb_kW": 72.0
+  },
+  "dT_adiabatic_TO_climb_K": 30.333333333333332,
+  "h_conv_W_m2K": 131.14111722583408,
+  "U_overall": 59.13280166809994,
+  "A_skin_box_m2": 54.91486068111454,
+  "reject_fullbox_kW_at_dT30": 97.41808695863057,
+  "A_skin_inboard_block_m2": 7.613423079226853,
+  "reject_inboard_block_kW_at_dT30": 13.506091108777685,
+  "q_vol_kW_m3": 24.988886467000512,
+  "dT_core_centre_K": {
+   "k1.4_L0.09": 72.28927870810863,
+   "k1.4_L0.18": 289.1571148324345,
+   "k30.0_L0.09": 3.373499673045069,
+   "k30.0_L0.18": 13.493998692180275
+  }
+ },
+ "mass": {
+  "conventional_pack": 2057.0,
+  "structural_pack": 1752.902750471231,
+  "pack_saving": 304.097249528769,
+  "inboard_block": {
+   "bending_relief_frac": -0.00012129745575228945,
+   "wing_bending_mass_saving_kg": -0.0436670840708242,
+   "strut_tension_kN": [
+    474.4697649444344,
+    462.93240365162796
+   ],
+   "strut_compression_governing_kN": [
+    189.7879059777737,
+    185.17296146065115
+   ],
+   "strut_mass_change_kg": -0.9786388617250275,
+   "systems_penalty_kg": 25,
+   "net_saving_kg": 280.0322213064232
+  },
+  "inboard_spread": {
+   "bending_relief_frac": -0.0003816848993598576,
+   "wing_bending_mass_saving_kg": -0.13740656376954874,
+   "strut_tension_kN": [
+    474.4697649444344,
+    438.165321816497
+   ],
+   "strut_compression_governing_kN": [
+    189.7879059777737,
+    175.26612872659877
+   ],
+   "strut_mass_change_kg": -3.1215325853403453,
+   "systems_penalty_kg": 50,
+   "net_saving_kg": 257.08137555033977
+  },
+  "outboard": {
+   "bending_relief_frac": 0.3330349715864823,
+   "wing_bending_mass_saving_kg": 119.89258977113363,
+   "strut_tension_kN": [
+    474.4697649444344,
+    337.50729250294603
+   ],
+   "strut_compression_governing_kN": [
+    189.7879059777737,
+    174.15085849951979
+   ],
+   "strut_mass_change_kg": -3.366523159979833,
+   "systems_penalty_kg": 50,
+   "net_saving_kg": 377.35636245988246
+  },
+  "full_span": {
+   "bending_relief_frac": 0.16571358541385284,
+   "wing_bending_mass_saving_kg": 59.656890748987024,
+   "strut_tension_kN": [
+    474.4697649444344,
+    388.02138850421665
+   ],
+   "strut_compression_governing_kN": [
+    189.7879059777737,
+    155.2085554016867
+   ],
+   "strut_mass_change_kg": -7.65416253352913,
+   "systems_penalty_kg": 50,
+   "net_saving_kg": 321.4083028112852
+  }
+ }
+}

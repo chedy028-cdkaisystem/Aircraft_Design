@@ -1,0 +1,907 @@
+{
+ "rows": {
+  "A": {
+   "xcg": 10.194003333333335,
+   "xcg_mac": 0.7553390174649806,
+   "SM": 0.149646171428571,
+   "Xnp": 10.484982,
+   "CL": 0.63128,
+   "alpha": -0.12385,
+   "trim": 7.64714,
+   "CDi": 0.0077659,
+   "e": 0.9522,
+   "CD0": 0.02189822186906082,
+   "LD": 21.28092659497918,
+   "range_simple_km": 140.22416871554069,
+   "SM_fixedCG": 0.6553390174649805,
+   "first_stall": "Wing",
+   "CLmax": 1.6194067748478704,
+   "Vs": 43.03364286432384,
+   "Cma_pre": -1.8245840985941055,
+   "Cma_post": -4.523156513240504,
+   "trim25": null,
+   "stall_by_surface": {
+    "Wing": {
+     "alpha": 9.494929006085195,
+     "CL": 1.6194067748478704
+    },
+    "Horizontal tail": null
+   },
+   "roc4": 1761.9804096154508,
+   "roc3": 1180.6469474120252,
+   "climb_CDi": 0.0135787,
+   "oei_V": 51.64043186229133,
+   "rud": 11.100783352957011,
+   "rud_ok": true,
+   "Cn_dr": 0.001499,
+   "Vmc": 39.396811238053495,
+   "Cnb": 0.093739,
+   "Clb": -0.033421,
+   "sp": [
+    1.574032806409519,
+    0.6809460934226599
+   ],
+   "ph": [
+    48.834824270405775,
+    0.02096902418833478
+   ],
+   "dr": [
+    1.1264537991721908,
+    0.1216657515134008
+   ],
+   "roll_tau": 0.25188511782108625,
+   "spiral_T2": 26.88123202770614,
+   "spiral_stable": false,
+   "rot": {
+    "x_main_gear": 10.1,
+    "xcg": 10.194003333333335,
+    "cg_ahead_of_main_gear_m": -0.09400333333333499,
+    "Cm_about_gear_d1m25": 1.85433,
+    "CL_alpha0_d1m25": 0.32309,
+    "VR_assumed": 47.33706254043373,
+    "net_nose_up_moment_kNm_at_VR": 206.05870425258527,
+    "pitch_accel_deg_s2_at_VR": 36.608474363299536,
+    "V_min_nosewheel_liftoff": 32.5,
+    "note": "tip-back risk if cg_ahead_of_main_gear_m <= 0"
+   }
+  },
+  "Bopt": {
+   "xcg": 9.323684333333334,
+   "xcg_mac": 0.3077463888935519,
+   "SM": 0.15015274285714245,
+   "Xnp": 9.615648,
+   "CL": 0.63128,
+   "alpha": 0.12694,
+   "trim": 2.20072,
+   "CDi": 0.0081831,
+   "e": 0.8923,
+   "CD0": 0.02104248057688478,
+   "LD": 21.600255240071935,
+   "range_simple_km": 142.32828733111617,
+   "SM_fixedCG": 0.2077463888935518,
+   "first_stall": "Foreplane",
+   "CLmax": 1.474100009881423,
+   "Vs": 45.104784551512054,
+   "Cma_pre": -1.5120356213502433,
+   "Cma_post": -2.2572684880916043,
+   "trim25": 20.0,
+   "stall_by_surface": {
+    "Wing": {
+     "alpha": 9.368104312938817,
+     "CL": 1.5555106519558677
+    },
+    "Foreplane": {
+     "alpha": 8.524703557312252,
+     "CL": 1.474100009881423
+    },
+    "Horizontal tail": null
+   },
+   "roc4": 1763.496630321297,
+   "roc3": 1182.208654739047,
+   "climb_CDi": 0.0143275,
+   "oei_V": 54.12504528417625,
+   "rud": 8.82838692394993,
+   "rud_ok": true,
+   "Cn_dr": 0.001637,
+   "Vmc": 38.257100877336526,
+   "Cnb": 0.104609,
+   "Clb": -0.029294,
+   "sp": [
+    1.3518719034282014,
+    0.5909493319339928
+   ],
+   "ph": [
+    42.15721889473005,
+    -0.00991484359324693
+   ],
+   "dr": [
+    1.1851688403116931,
+    0.13079105094024304
+   ],
+   "roll_tau": 0.2532976527008867,
+   "spiral_T2": 25.966966710347695,
+   "spiral_stable": false,
+   "rot": {
+    "x_main_gear": 10.1,
+    "xcg": 9.323684333333334,
+    "cg_ahead_of_main_gear_m": 0.7763156666666653,
+    "Cm_about_gear_d1m25": 0.85747,
+    "CL_alpha0_d1m25": 0.51014,
+    "VR_assumed": 49.61462484382824,
+    "net_nose_up_moment_kNm_at_VR": -33.44183725229444,
+    "pitch_accel_deg_s2_at_VR": -5.819770354581744,
+    "V_min_nosewheel_liftoff": 54.0,
+    "note": "tip-back risk if cg_ahead_of_main_gear_m <= 0"
+   }
+  },
+  "Bopt_x6": {
+   "xcg": 9.268011333333334,
+   "xcg_mac": 0.27911456032212306,
+   "SM": 0.1500791999999998,
+   "Xnp": 9.559832,
+   "CL": 0.63128,
+   "alpha": 0.08914,
+   "trim": 2.34954,
+   "CDi": 0.0082355,
+   "e": 0.8841,
+   "CD0": 0.02104248057688478,
+   "LD": 21.561596379307698,
+   "range_simple_km": 142.07355657068803,
+   "SM_fixedCG": 0.17911456032212295,
+   "first_stall": "Foreplane",
+   "CLmax": 1.4707675914634144,
+   "Vs": 45.1558541328621,
+   "Cma_pre": -1.5194840726869432,
+   "Cma_post": -2.3099171120085833,
+   "trim25": 20.0,
+   "stall_by_surface": {
+    "Wing": {
+     "alpha": 9.326326326326328,
+     "CL": 1.556913013013013
+    },
+    "Foreplane": {
+     "alpha": 8.435975609756095,
+     "CL": 1.4707675914634144
+    },
+    "Horizontal tail": null
+   },
+   "roc4": 1763.2003087404803,
+   "roc3": 1181.9034435108058,
+   "climb_CDi": 0.0143484,
+   "oei_V": 54.1867989248467,
+   "rud": 8.734211677857722,
+   "rud_ok": true,
+   "Cn_dr": 0.001649,
+   "Vmc": 38.164074125081996,
+   "Cnb": 0.105307,
+   "Clb": -0.029385,
+   "sp": [
+    1.3605169706069686,
+    0.594319412088377
+   ],
+   "ph": [
+    42.38673164159026,
+    -0.008848094161752203
+   ],
+   "dr": [
+    1.1890619930534323,
+    0.13101465895326847
+   ],
+   "roll_tau": 0.2532604848739202,
+   "spiral_T2": 26.025921250603744,
+   "spiral_stable": false,
+   "rot": {
+    "x_main_gear": 10.1,
+    "xcg": 9.268011333333334,
+    "cg_ahead_of_main_gear_m": 0.8319886666666658,
+    "Cm_about_gear_d1m25": 0.87951,
+    "CL_alpha0_d1m25": 0.51355,
+    "VR_assumed": 49.67123234777615,
+    "net_nose_up_moment_kNm_at_VR": -35.252227604838275,
+    "pitch_accel_deg_s2_at_VR": -6.115964656923703,
+    "V_min_nosewheel_liftoff": 54.0,
+    "note": "tip-back risk if cg_ahead_of_main_gear_m <= 0"
+   }
+  }
+ },
+ "mission": {
+  "assumptions": {
+   "dCD0_realistic": 0.006,
+   "pack_mass_kg": 2057.1428571428573,
+   "packs_kWh": {
+    "baseline_175Whkg_pack": 360.0,
+    "SiAnode_450cell_315pack": 648.0
+   },
+   "mtow": 11340,
+   "eta": 0.707,
+   "soc_window": 0.9,
+   "note": "mission(): taxi/TO/climb@1.2MW/cruise 80 m/s/descent; range = ground distance"
+  },
+  "cases": {
+   "A|AVL+CD0|baseline_175Whkg_pack|3000m|none": {
+    "LD": 21.28092659497918,
+    "E_kWh": 360.0,
+    "range_km": 107.1090656445425,
+    "climb_kWh": 257.32052436499816,
+    "climb_min": 12.866026218249907,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 12.030121556736885,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|baseline_175Whkg_pack|3000m|30min": {
+    "LD": 21.28092659497918,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 257.32052436499816,
+    "climb_min": 12.866026218249907,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 236.6040055998065,
+    "cruise_kWh": -224.57388404306963,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|baseline_175Whkg_pack|1500m|none": {
+    "LD": 21.28092659497918,
+    "E_kWh": 360.0,
+    "range_km": 123.50432068847269,
+    "climb_kWh": 128.66026218249908,
+    "climb_min": 6.433013109124953,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 149.6817274450351,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|baseline_175Whkg_pack|1500m|30min": {
+    "LD": 21.28092659497918,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 128.66026218249908,
+    "climb_min": 6.433013109124953,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 236.6040055998065,
+    "cruise_kWh": -86.92227815477139,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|SiAnode_450cell_315pack|3000m|none": {
+    "LD": 21.28092659497918,
+    "E_kWh": 648.0,
+    "range_km": 233.31081748852912,
+    "climb_kWh": 257.32052436499816,
+    "climb_min": 12.866026218249907,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 271.23012155673695,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|SiAnode_450cell_315pack|3000m|30min": {
+    "LD": 21.28092659497918,
+    "E_kWh": 648.0,
+    "range_km": 118.11081748852915,
+    "climb_kWh": 257.32052436499816,
+    "climb_min": 12.866026218249907,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 236.6040055998065,
+    "cruise_kWh": 34.626115956930455,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|SiAnode_450cell_315pack|1500m|none": {
+    "LD": 21.28092659497918,
+    "E_kWh": 648.0,
+    "range_km": 249.7060725324593,
+    "climb_kWh": 128.66026218249908,
+    "climb_min": 6.433013109124953,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 408.8817274450351,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|AVL+CD0|SiAnode_450cell_315pack|1500m|30min": {
+    "LD": 21.28092659497918,
+    "E_kWh": 648.0,
+    "range_km": 134.50607253245929,
+    "climb_kWh": 128.66026218249908,
+    "climb_min": 6.433013109124953,
+    "roc_fpm": 764.9992183319847,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 236.6040055998065,
+    "cruise_kWh": 172.2777218452286,
+    "Pcruise_kW": 591.5100139995162
+   },
+   "A|realistic(+0.006)|baseline_175Whkg_pack|3000m|none": {
+    "LD": 17.70070218797803,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 297.5233935779624,
+    "climb_min": 14.876169678898119,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": -28.172747656227358,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|baseline_175Whkg_pack|3000m|30min": {
+    "LD": 17.70070218797803,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 297.5233935779624,
+    "climb_min": 14.876169678898119,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 284.46060623896045,
+    "cruise_kWh": -312.63335389518784,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|baseline_175Whkg_pack|1500m|none": {
+    "LD": 17.70070218797803,
+    "E_kWh": 360.0,
+    "range_km": 102.72641041630958,
+    "climb_kWh": 148.7616967889812,
+    "climb_min": 7.4380848394490595,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 129.580292838553,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|baseline_175Whkg_pack|1500m|30min": {
+    "LD": 17.70070218797803,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 148.7616967889812,
+    "climb_min": 7.4380848394490595,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 284.46060623896045,
+    "cruise_kWh": -154.88031340040746,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|SiAnode_450cell_315pack|3000m|none": {
+    "LD": 17.70070218797803,
+    "E_kWh": 648.0,
+    "range_km": 194.05946818934513,
+    "climb_kWh": 297.5233935779624,
+    "climb_min": 14.876169678898119,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 231.02725234377272,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|SiAnode_450cell_315pack|3000m|30min": {
+    "LD": 17.70070218797803,
+    "E_kWh": 648.0,
+    "range_km": null,
+    "climb_kWh": 297.5233935779624,
+    "climb_min": 14.876169678898119,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 284.46060623896045,
+    "cruise_kWh": -53.43335389518774,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|SiAnode_450cell_315pack|1500m|none": {
+    "LD": 17.70070218797803,
+    "E_kWh": 648.0,
+    "range_km": 207.69644614391513,
+    "climb_kWh": 148.7616967889812,
+    "climb_min": 7.4380848394490595,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 388.78029283855307,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "A|realistic(+0.006)|SiAnode_450cell_315pack|1500m|30min": {
+    "LD": 17.70070218797803,
+    "E_kWh": 648.0,
+    "range_km": 92.49644614391511,
+    "climb_kWh": 148.7616967889812,
+    "climb_min": 7.4380848394490595,
+    "roc_fpm": 661.6286458443404,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 284.46060623896045,
+    "cruise_kWh": 104.3196865995926,
+    "Pcruise_kW": 711.1515155974012
+   },
+   "Bopt|AVL+CD0|baseline_175Whkg_pack|3000m|none": {
+    "LD": 21.600255240071935,
+    "E_kWh": 360.0,
+    "range_km": 108.71627915833245,
+    "climb_kWh": 254.80399843086923,
+    "climb_min": 12.74019992154346,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 14.546647490865816,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|baseline_175Whkg_pack|3000m|30min": {
+    "LD": 21.600255240071935,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 254.80399843086923,
+    "climb_min": 12.74019992154346,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 233.10615635256528,
+    "cruise_kWh": -218.55950886169947,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|baseline_175Whkg_pack|1500m|none": {
+    "LD": 21.600255240071935,
+    "E_kWh": 360.0,
+    "range_km": 125.35755143068367,
+    "climb_kWh": 127.40199921543461,
+    "climb_min": 6.37009996077173,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 150.9399904120996,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|baseline_175Whkg_pack|1500m|30min": {
+    "LD": 21.600255240071935,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 127.40199921543461,
+    "climb_min": 6.37009996077173,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 233.10615635256528,
+    "cruise_kWh": -82.16616594046569,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|SiAnode_450cell_315pack|3000m|none": {
+    "LD": 21.600255240071935,
+    "E_kWh": 648.0,
+    "range_km": 236.81173775633704,
+    "climb_kWh": 254.80399843086923,
+    "climb_min": 12.74019992154346,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 273.7466474908659,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|SiAnode_450cell_315pack|3000m|30min": {
+    "LD": 21.600255240071935,
+    "E_kWh": 648.0,
+    "range_km": 121.61173775633702,
+    "climb_kWh": 254.80399843086923,
+    "climb_min": 12.74019992154346,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 233.10615635256528,
+    "cruise_kWh": 40.6404911383006,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|SiAnode_450cell_315pack|1500m|none": {
+    "LD": 21.600255240071935,
+    "E_kWh": 648.0,
+    "range_km": 253.45301002868825,
+    "climb_kWh": 127.40199921543461,
+    "climb_min": 6.37009996077173,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 410.1399904120996,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|AVL+CD0|SiAnode_450cell_315pack|1500m|30min": {
+    "LD": 21.600255240071935,
+    "E_kWh": 648.0,
+    "range_km": 138.25301002868824,
+    "climb_kWh": 127.40199921543461,
+    "climb_min": 6.37009996077173,
+    "roc_fpm": 772.5545957372694,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 233.10615635256528,
+    "cruise_kWh": 177.03383405953434,
+    "Pcruise_kW": 582.7653908814132
+   },
+   "Bopt|realistic(+0.006)|baseline_175Whkg_pack|3000m|none": {
+    "LD": 17.921067294324438,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 294.1642256252271,
+    "climb_min": 14.708211281261356,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": -24.813579703492096,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|baseline_175Whkg_pack|3000m|30min": {
+    "LD": 17.921067294324438,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 294.1642256252271,
+    "climb_min": 14.708211281261356,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 280.9627569917193,
+    "cruise_kWh": -305.7763366952114,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|baseline_175Whkg_pack|1500m|none": {
+    "LD": 17.921067294324438,
+    "E_kWh": 360.0,
+    "range_km": 104.00530410739431,
+    "climb_kWh": 147.08211281261356,
+    "climb_min": 7.354105640630678,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 131.25987681492063,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|baseline_175Whkg_pack|1500m|30min": {
+    "LD": 17.921067294324438,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 147.08211281261356,
+    "climb_min": 7.354105640630678,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 280.9627569917193,
+    "cruise_kWh": -149.70288017679871,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|SiAnode_450cell_315pack|3000m|none": {
+    "LD": 17.921067294324438,
+    "E_kWh": 648.0,
+    "range_km": 196.4754138897432,
+    "climb_kWh": 294.1642256252271,
+    "climb_min": 14.708211281261356,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 234.38642029650796,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|SiAnode_450cell_315pack|3000m|30min": {
+    "LD": 17.921067294324438,
+    "E_kWh": 648.0,
+    "range_km": null,
+    "climb_kWh": 294.1642256252271,
+    "climb_min": 14.708211281261356,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 17.982687411598302,
+    "reserve_kWh": 280.9627569917193,
+    "cruise_kWh": -46.57633669521133,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|SiAnode_450cell_315pack|1500m|none": {
+    "LD": 17.921067294324438,
+    "E_kWh": 648.0,
+    "range_km": 210.28216556658072,
+    "climb_kWh": 147.08211281261356,
+    "climb_min": 7.354105640630678,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 390.4598768149206,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt|realistic(+0.006)|SiAnode_450cell_315pack|1500m|30min": {
+    "LD": 17.921067294324438,
+    "E_kWh": 648.0,
+    "range_km": 95.08216556658068,
+    "climb_kWh": 147.08211281261356,
+    "climb_min": 7.354105640630678,
+    "roc_fpm": 669.1840232496253,
+    "descent_kWh": 8.991343705799151,
+    "reserve_kWh": 280.9627569917193,
+    "cruise_kWh": 109.49711982320133,
+    "Pcruise_kW": 702.4068924792982
+   },
+   "Bopt_x6|AVL+CD0|baseline_175Whkg_pack|3000m|none": {
+    "LD": 21.561596379307698,
+    "E_kWh": 360.0,
+    "range_km": 108.52170518445688,
+    "climb_kWh": 255.10209831593014,
+    "climb_min": 12.755104915796506,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 14.248547605804895,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|baseline_175Whkg_pack|3000m|30min": {
+    "LD": 21.561596379307698,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 255.10209831593014,
+    "climb_min": 12.755104915796506,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 233.52410399814718,
+    "cruise_kWh": -219.27555639234228,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|baseline_175Whkg_pack|1500m|none": {
+    "LD": 21.561596379307698,
+    "E_kWh": 360.0,
+    "range_km": 125.13319389080084,
+    "climb_kWh": 127.55104915796507,
+    "climb_min": 6.377552457898253,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 150.79094046956914,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|baseline_175Whkg_pack|1500m|30min": {
+    "LD": 21.561596379307698,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 127.55104915796507,
+    "climb_min": 6.377552457898253,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 233.52410399814718,
+    "cruise_kWh": -82.73316352857805,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|SiAnode_450cell_315pack|3000m|none": {
+    "LD": 21.561596379307698,
+    "E_kWh": 648.0,
+    "range_km": 236.38790609807614,
+    "climb_kWh": 255.10209831593014,
+    "climb_min": 12.755104915796506,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 273.44854760580495,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|SiAnode_450cell_315pack|3000m|30min": {
+    "LD": 21.561596379307698,
+    "E_kWh": 648.0,
+    "range_km": 121.18790609807614,
+    "climb_kWh": 255.10209831593014,
+    "climb_min": 12.755104915796506,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 233.52410399814718,
+    "cruise_kWh": 39.924443607657786,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|SiAnode_450cell_315pack|1500m|none": {
+    "LD": 21.561596379307698,
+    "E_kWh": 648.0,
+    "range_km": 252.9993948044201,
+    "climb_kWh": 127.55104915796507,
+    "climb_min": 6.377552457898253,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 409.9909404695692,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|AVL+CD0|SiAnode_450cell_315pack|1500m|30min": {
+    "LD": 21.561596379307698,
+    "E_kWh": 648.0,
+    "range_km": 137.7993948044201,
+    "climb_kWh": 127.55104915796507,
+    "climb_min": 6.377552457898253,
+    "roc_fpm": 771.6518260708773,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 233.52410399814718,
+    "cruise_kWh": 176.46683647142197,
+    "Pcruise_kW": 583.8102599953679
+   },
+   "Bopt_x6|realistic(+0.006)|baseline_175Whkg_pack|3000m|none": {
+    "LD": 17.894448312430733,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 294.5616070247625,
+    "climb_min": 14.728080351238125,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": -25.210961103027472,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|baseline_175Whkg_pack|3000m|30min": {
+    "LD": 17.894448312430733,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 294.5616070247625,
+    "climb_min": 14.728080351238125,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 281.3807046373012,
+    "cruise_kWh": -306.5916657403287,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|baseline_175Whkg_pack|1500m|none": {
+    "LD": 17.894448312430733,
+    "E_kWh": 360.0,
+    "range_km": 103.8508202665931,
+    "climb_kWh": 147.28080351238125,
+    "climb_min": 7.3640401756190625,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 131.06118611515294,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|baseline_175Whkg_pack|1500m|30min": {
+    "LD": 17.894448312430733,
+    "E_kWh": 360.0,
+    "range_km": null,
+    "climb_kWh": 147.28080351238125,
+    "climb_min": 7.3640401756190625,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 281.3807046373012,
+    "cruise_kWh": -150.31951852214826,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|SiAnode_450cell_315pack|3000m|none": {
+    "LD": 17.894448312430733,
+    "E_kWh": 648.0,
+    "range_km": 196.1835799604914,
+    "climb_kWh": 294.5616070247625,
+    "climb_min": 14.728080351238125,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 233.9890388969726,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|SiAnode_450cell_315pack|3000m|30min": {
+    "LD": 17.894448312430733,
+    "E_kWh": 648.0,
+    "range_km": null,
+    "climb_kWh": 294.5616070247625,
+    "climb_min": 14.728080351238125,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 17.982687411598306,
+    "reserve_kWh": 281.3807046373012,
+    "cruise_kWh": -47.3916657403286,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|SiAnode_450cell_315pack|1500m|none": {
+    "LD": 17.894448312430733,
+    "E_kWh": 648.0,
+    "range_km": 209.96982383682453,
+    "climb_kWh": 147.28080351238125,
+    "climb_min": 7.3640401756190625,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 0.0,
+    "cruise_kWh": 390.26118611515295,
+    "Pcruise_kW": 703.451761593253
+   },
+   "Bopt_x6|realistic(+0.006)|SiAnode_450cell_315pack|1500m|30min": {
+    "LD": 17.894448312430733,
+    "E_kWh": 648.0,
+    "range_km": 94.76982383682456,
+    "climb_kWh": 147.28080351238125,
+    "climb_min": 7.3640401756190625,
+    "roc_fpm": 668.2812535832333,
+    "descent_kWh": 8.991343705799153,
+    "reserve_kWh": 281.3807046373012,
+    "cruise_kWh": 108.88048147785177,
+    "Pcruise_kW": 703.451761593253
+   }
+  }
+ },
+ "cad": {
+  "Bopt": {
+   "stl_watertight": true,
+   "faces": 8214,
+   "bounds": [
+    [
+     0.0,
+     -16.149609853,
+     1.05
+    ],
+    [
+     21.720163465,
+     16.149609853,
+     7.3367848104
+    ]
+   ],
+   "ht_area": 4.8,
+   "fp": {
+    "b": 4.898979485566356,
+    "cr": 1.0206207261596576,
+    "ct": 0.6123724356957946,
+    "sweep": 5.0,
+    "x": 7.0,
+    "z": 3.0,
+    "inc": 2.0,
+    "naca": "2412",
+    "S": 4.0,
+    "mac": 0.8335069263637203,
+    "xmac": 7.098222017628423,
+    "ecf": 0.35,
+    "control": false
+   },
+   "cd0": {
+    "wing": 0.0076856987750547265,
+    "fuselage": 0.00447403750546553,
+    "vtail": 0.0018091994210369484,
+    "htail": 0.0007870824599384261,
+    "foreplane": 0.0002580817816483438,
+    "nacelles": 0.0019838488321078833,
+    "sponsons": 0.0008140233011862396,
+    "struts": 0.0013175557207298798,
+    "misc": 0.001912952779716798,
+    "total": 0.02104248057688478
+   }
+  },
+  "Bopt_x6": {
+   "stl_watertight": true,
+   "faces": 8218,
+   "bounds": [
+    [
+     0.0,
+     -16.149609853,
+     1.05
+    ],
+    [
+     21.720163465,
+     16.149609853,
+     7.3367848104
+    ]
+   ],
+   "ht_area": 4.8,
+   "fp": {
+    "b": 4.898979485566356,
+    "cr": 1.0206207261596576,
+    "ct": 0.6123724356957946,
+    "sweep": 5.0,
+    "x": 6.0,
+    "z": 3.0,
+    "inc": 3.0,
+    "naca": "2412",
+    "S": 4.0,
+    "mac": 0.8335069263637203,
+    "xmac": 6.098222017628423,
+    "ecf": 0.35,
+    "control": false
+   },
+   "cd0": {
+    "wing": 0.0076856987750547265,
+    "fuselage": 0.00447403750546553,
+    "vtail": 0.0018091994210369484,
+    "htail": 0.0007870824599384261,
+    "foreplane": 0.0002580817816483438,
+    "nacelles": 0.0019838488321078833,
+    "sponsons": 0.0008140233011862396,
+    "struts": 0.0013175557207298798,
+    "misc": 0.001912952779716798,
+    "total": 0.02104248057688478
+   }
+  }
+ },
+ "variants": {
+  "Bopt": {
+   "area": 4.0,
+   "x": 7.0,
+   "inc": 2.0,
+   "hts": 0.4
+  },
+  "Bopt_x6": {
+   "area": 4.0,
+   "x": 6.0,
+   "inc": 3.0,
+   "hts": 0.4
+  }
+ },
+ "notes": [
+  "All values are ESTIMATES from the parametric model (AVL 3.52 VLM + Raymer CD0 buildup + battery_study mission).",
+  "CAD pod-diameter bug (VSP FineRatio=L/radius) fixed 2026-10-19 in cad_v2.py; AVL/CD0 never used CAD so unaffected."
+ ]
+}

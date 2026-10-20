@@ -1,0 +1,19 @@
+warning: function /workspace/x1_model/range.m shadows a core library function
+
+Heart X1 range ESTIMATES  (E=360 kWh, f_usable=0.80, eta_total=0.707)
+variant                CG mode                   CL       CD     L/D  range km
+A baseline T-tail      same CG (25% MAC)      0.631  0.02963   21.30     140.3
+A baseline T-tail      CG for 15% SM          0.631  0.02966   21.28     140.2
+B 3-surface (P.180)    same CG (25% MAC)      0.631  0.02933   21.53     141.8
+B 3-surface (P.180)    CG for 15% SM          0.631  0.02923   21.59     142.3
+C foreplane/no HT      same CG (25% MAC)      0.631  0.02865   22.03     145.1
+C foreplane/no HT      CG for 15% SM          0.631  0.03430   18.41     121.3
+
+Sensitivity, variant A same-CG (R0 = 140.3 km):
+  L/D -10% / +10%                  126.3 km    154.4 km   (-10.0% / +10.0%)
+  f_usable 0.70 / 0.90             122.8 km    157.9 km   (-12.5% / +12.5%)
+  eta_prop 0.75 / 0.85             131.6 km    149.1 km   ( -6.3% /  +6.2%)
+  eta_drive 0.90 / 0.96            135.8 km    144.9 km   ( -3.2% /  +3.2%)
+  mass +500 kg / -500 kg           134.4 km    146.8 km   ( -4.2% /  +4.6%)
+  E 288 / 540 kWh (same mass)      112.3 km    210.5 km   (-20.0% / +50.0%)
+  d(range)/d(L/D) = 6.59 km per unit L/D
