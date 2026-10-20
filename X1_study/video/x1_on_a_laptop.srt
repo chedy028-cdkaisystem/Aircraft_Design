@@ -1,0 +1,463 @@
+1
+00:00:00,200 --> 00:00:17,300
+Redesigning an electric airliner, on a laptop. This is an independent study of the Heart Aerospace X1. We build a model of it from public data, see how far it can really fly, and then try to make it better.
+
+2
+00:00:17,600 --> 00:00:27,500
+Here's what Heart has published. An all-electric demonstrator, with a strut-braced high wing, a T-tail, and four motor pods on the wing.
+
+3
+00:00:27,800 --> 00:00:35,700
+The span is 32.3 meters, the length 23.2 meters, and the max takeoff weight about 11,340 kilograms.
+
+4
+00:00:36,000 --> 00:00:44,300
+It has four 400 kilowatt electric motors, and four 90 kilowatt-hour battery packs. That's 360 kilowatt-hours in total.
+
+5
+00:00:44,600 --> 00:01:02,500
+We asked four questions. How far can it really fly on 360 kilowatt-hours? Would better batteries, or a battery built into the wing, help? Would a small front wing improve efficiency? And does a real CFD simulation agree with the quick tools?
+
+6
+00:01:02,800 --> 00:01:14,700
+That front-wing idea came from a remark attributed to Elon Musk: put a small wing up front, in place of the tail. We tested that idea literally.
+
+7
+00:01:15,000 --> 00:01:36,900
+One important note before we start. Heart hasn't published CAD for the X1. Every number here is an estimate from an independent hobby study, built from public figures, photo measurements and engineering assumptions. It is not Heart data. And the alternative layouts are hypothetical. None of them exists on the real aircraft.
+
+8
+00:01:37,200 --> 00:01:42,300
+All of it runs on one laptop, with free tools.
+
+9
+00:01:42,600 --> 00:01:55,300
+OpenVSP for the geometry. AVL for quick aerodynamics and stability. Python and Octave for range, mission and battery models. And OpenFOAM for CFD, a full simulation of the airflow.
+
+10
+00:01:55,600 --> 00:01:58,800
+Part 2: The model.
+
+11
+00:01:59,100 --> 00:02:12,600
+Step one: build a paper airplane from public data. Every value lives in one parameter file, and every value is tagged: published, photo estimate, or assumption, each with its own uncertainty.
+
+12
+00:02:12,900 --> 00:02:25,200
+A Python generator reads that one file and builds everything else: the OpenVSP geometry, the AVL input decks, a watertight STL surface for CFD, and a drag build-up.
+
+13
+00:02:25,500 --> 00:02:42,200
+The missing dimensions were scaled off the published span, length and height. That gives a wing of about 60.6 square meters, with an aspect ratio of 17.2: long and skinny. The area alone is uncertain by about 15 percent.
+
+14
+00:02:42,500 --> 00:02:52,400
+A quick sanity check: the model comes out 22.9 meters long, against 23.2 published. And 7.37 meters tall, against 7.3. Close enough.
+
+15
+00:02:52,700 --> 00:03:02,200
+Here's the result: our own estimated geometry, in three views. Not Heart's drawings, just our best reading of the public numbers.
+
+16
+00:03:02,500 --> 00:03:17,200
+We also had to assume what Heart hasn't published: cruise at 80 meters per second at 3,000 meters, and the balance point, the center of gravity, at 25 percent of the wing's mean chord.
+
+17
+00:03:17,500 --> 00:03:31,000
+Now the key number: L over D, lift divided by drag. It tells you how much weight the wing carries for each unit of drag. Higher means less energy per kilometer.
+
+18
+00:03:31,300 --> 00:03:45,600
+AVL gives the baseline an L over D of about 21.3, and a simple cruise-only range of about 140 kilometers. Each unit of L over D is worth about 6.6 kilometers of range.
+
+19
+00:03:45,900 --> 00:03:57,800
+But 21 is optimistic. The drag estimate leaves out the landing gear, cooling, and lots of small bumps and gaps. Hold that thought. It comes back later.
+
+20
+00:03:58,100 --> 00:04:01,300
+Part 3: Mission energy.
+
+21
+00:04:01,600 --> 00:04:09,500
+Step two: does 360 kilowatt-hours actually get you anywhere? We modeled a full mission, at max weight.
+
+22
+00:04:09,800 --> 00:04:20,500
+Ten minutes of taxi. A takeoff at 1.6 megawatts. A climb at 1.2 megawatts. Cruise at 80 meters per second. And a gliding descent.
+
+23
+00:04:20,800 --> 00:04:33,100
+The pack: 250 watt-hour-per-kilogram cells, about 175 at pack level once you add the structure. So 360 kilowatt-hours weighs about 2,060 kilograms. Roughly 18 percent of the airplane.
+
+24
+00:04:33,400 --> 00:04:42,100
+Because 21 is optimistic, we also tested L over D values of 18 and 16, which are more realistic.
+
+25
+00:04:42,400 --> 00:04:54,300
+The results. At 3,000 meters, with the optimistic L over D and no reserve: about 106 kilometers. The climb alone uses about 260 of the 360 kilowatt-hours.
+
+26
+00:04:54,600 --> 00:05:03,700
+At the more realistic L over D of 18 or 16, at that altitude, the mission can't even be completed.
+
+27
+00:05:04,000 --> 00:05:10,700
+Fly lower, at 1,500 meters, and you get about 122, 105, or 93 kilometers.
+
+28
+00:05:11,000 --> 00:05:26,500
+Now the killer. Real flights carry reserve energy, like thirty minutes of loiter. The reserve alone needs 240 to 350 kilowatt-hours. With any reserve, the mission isn't feasible, at any altitude, at any L over D.
+
+29
+00:05:26,800 --> 00:05:40,300
+Flip it around: how much battery would you actually need? Here's what's installed: 360 kilowatt-hours. Just 100 kilometers, with no reserve, takes about 350 to 430, depending on L over D.
+
+30
+00:05:40,600 --> 00:05:45,700
+Two hundred kilometers, with no reserve: about 580 to 720.
+
+31
+00:05:46,000 --> 00:05:53,900
+And 200 kilometers with a 30-minute reserve: about 845 to 1,070. Two to three times what's installed.
+
+32
+00:05:54,200 --> 00:06:05,300
+And you can't just bolt on more battery. More battery means more weight, which needs more energy, which needs more battery. That's the weight spiral.
+
+33
+00:06:05,600 --> 00:06:16,700
+At fixed max weight, 200 kilometers plus a reserve, at L over D 18, needs about 3,460 kilograms more battery. That wipes out the payload.
+
+34
+00:06:17,000 --> 00:06:28,900
+Let the airplane grow instead, and 200 kilometers with no reserve converges at about 842 kilowatt-hours, and 14.8 tonnes. With a 30-minute reserve, the design never converges.
+
+35
+00:06:29,200 --> 00:06:38,700
+There's a power problem too. C rate is power relative to capacity. 1 C would empty the pack in one hour.
+
+36
+00:06:39,000 --> 00:06:51,700
+Takeoff at 1.6 megawatts, from 360 kilowatt-hours, is a 4.4 C peak: about 2,220 amps at 720 volts. Today's high-energy cells are rated for only 1 to 2 C.
+
+37
+00:06:52,000 --> 00:07:01,500
+So the X1 makes sense as a demonstrator. And the big lesson: battery energy density, not aerodynamics, is what limits it.
+
+38
+00:07:01,800 --> 00:07:05,000
+Part 4: Battery chemistry.
+
+39
+00:07:05,300 --> 00:07:20,800
+Step three. If the battery is the limit, what about a better battery? We compared six chemistries at the same pack mass, about 2,057 kilograms, flying at 1,500 meters with an L over D of 18.
+
+40
+00:07:21,100 --> 00:07:32,600
+LFP, the safe and cheap chemistry in many cars, is too heavy: about 62 kilometers. NMC and NCA, today's high-energy workhorses, reach about 110 and 115.
+
+41
+00:07:32,900 --> 00:07:45,600
+Lithium-sulfur and solid-state land around 145. And silicon-anode cells reach about 211 kilometers. They're the only chemistry here that can also carry a 30-minute reserve, at about 96 kilometers.
+
+42
+00:07:45,900 --> 00:07:59,800
+The catch: today's 450 watt-hour-per-kilogram silicon cells are rated at just 1 C, and last 150 to 300 cycles. The X1 needs a 4.4 C peak, and more than a thousand cycles.
+
+43
+00:08:00,100 --> 00:08:14,000
+So our recommendation is two-track. For the demonstrator: proven, high-power NMC or NCA 21700 cells, in four independent 90 kilowatt-hour packs. They handle 4 to 5 C, and they have certification data.
+
+44
+00:08:14,300 --> 00:08:27,800
+For a product: silicon-anode NMC, the only chemistry that roughly doubles range at the same mass. A realistic target is a power-balanced cell of about 350 to 400 watt-hours per kilogram.
+
+45
+00:08:28,100 --> 00:08:34,000
+Keep an eye on lithium-sulfur and solid-state. And avoid LFP for propulsion.
+
+46
+00:08:34,300 --> 00:08:37,500
+Part 5: The wing battery.
+
+47
+00:08:37,800 --> 00:08:52,900
+Step four, a wilder idea. What if the battery is the wing? Pack cylindrical cells into the wing box, bond them with potting, and let the cells work like a honeycomb core that carries load.
+
+48
+00:08:53,200 --> 00:09:05,500
+Space isn't the problem. The wing box holds about 6.4 cubic meters, and 360 kilowatt-hours needs only 17 to 20 percent of it. Mass is the real constraint.
+
+49
+00:09:05,800 --> 00:09:14,500
+Dropping the separate pack structure gives a structural pack of about 1,753 kilograms, against 2,057 for a conventional pack.
+
+50
+00:09:14,800 --> 00:09:28,700
+But where in the wing? This is a strut-braced wing. The strut meets the wing about 6.5 meters out, and the peak bending moment, about 397 kilonewton-meters, sits right at the strut.
+
+51
+00:09:29,000 --> 00:09:38,900
+Cells inboard of the strut give no bending relief at all, because that peak is set by the loads outboard of it.
+
+52
+00:09:39,200 --> 00:09:55,900
+Cells outboard of the strut cut the wing moment by a third, and strut tension by 29 percent. But on landing, strut compression nearly triples, roll inertia more than doubles, and the cells are more exposed in a crash.
+
+53
+00:09:56,200 --> 00:10:05,300
+Here's the beam model behind it: shear, bending moment, and where the battery mass sits, for each of five placements.
+
+54
+00:10:05,600 --> 00:10:16,300
+Net savings land between about 257 and 377 kilograms, 2 to 3 percent of max weight. That's roughly 10 to 15 percent more energy.
+
+55
+00:10:16,600 --> 00:10:32,500
+The surprise was the glue. Peak shear in the cell core is about 0.5 to 1.5 megapascals. Structural adhesive on bare or primed metal cans is good for 2.4 to 3.8 at design level. Plenty of margin.
+
+56
+00:10:32,800 --> 00:10:48,700
+But normal cells come wrapped in plastic shrink film, and the film's own adhesive becomes the weak link: about 0.5 at design level. With wrapped cells, every placement fails. So the cells must be unwrapped and primed.
+
+57
+00:10:49,000 --> 00:10:58,100
+Heat matters too. Takeoff and climb warm the pack by about 30 degrees, with almost no cooling in that time.
+
+58
+00:10:58,400 --> 00:11:11,100
+In cruise, a spread-out layout can shed its losses, about 18 kilowatts, passively through the wing skins. A single inboard block can only shed 13 to 14. Not enough.
+
+59
+00:11:11,400 --> 00:11:24,100
+And a full-depth block gets too hot in the middle. So keep the stack about two cells deep, or add fins that carry the heat out to the skins.
+
+60
+00:11:24,400 --> 00:11:39,100
+Our pick: spread the cells from the wing root out to the outboard motor pod, two tiers deep, bonded to primed cans, with fins to the skins. Net saving: about 250 to 300 kilograms.
+
+61
+00:11:39,400 --> 00:11:53,700
+But be honest about the open issues: crashworthiness, venting a thermal runaway inside a wing, cell swelling, cells you can't replace one by one, flutter, and certification. No aircraft has flown with this.
+
+62
+00:11:54,000 --> 00:11:57,500
+Part 6: A small front wing.
+
+63
+00:11:57,800 --> 00:12:08,100
+Step five: aerodynamics. Could a small front wing make the X1 more efficient? A front wing is called a canard, or a foreplane.
+
+64
+00:12:08,400 --> 00:12:23,900
+Our quick tool is AVL, a vortex-lattice method. It models the lifting surfaces only: no fuselage, no viscosity, no real stall. So stall is estimated when the first strip of wing reaches an assumed lift limit.
+
+65
+00:12:24,200 --> 00:12:29,700
+We tried four layouts. A is the baseline, with its T-tail.
+
+66
+00:12:30,000 --> 00:12:37,900
+B is a Piaggio P.180-style three-surface layout: a small foreplane, plus a tail shrunk to 60 percent.
+
+67
+00:12:38,200 --> 00:12:43,700
+C is the literal version: a foreplane replaces the tail completely.
+
+68
+00:12:44,000 --> 00:12:55,900
+And B-opt is the best B we found in a sweep: a 4 square meter foreplane, 7 meters back, with the tail cut to 4.8 square meters.
+
+69
+00:12:56,200 --> 00:13:15,700
+To compare them fairly, each one gets a 15 percent static margin. Static margin is how far the balance point sits ahead of the aerodynamic neutral point. Positive means the airplane naturally returns to level flight. And every layout is trimmed at the same cruise lift.
+
+70
+00:13:16,000 --> 00:13:33,500
+Layout C first. Left at the same balance point, it's unstable, with a static margin of minus 17 percent. It looks 3 to 4 percent more efficient, but only with a computer actively flying it, and it shows a deep-stall trap.
+
+71
+00:13:33,800 --> 00:13:45,300
+Make it stable, and it falls apart. The smallest workable foreplane is 10 square meters, and every workable size loses 13.6 to 16.4 percent of range.
+
+72
+00:13:45,600 --> 00:14:00,700
+Why? Deleting the tail saves about 5.3 percent. But trimming with a front wing ruins the lift distribution: span efficiency falls from 0.95 to 0.52, and that costs about 17.8 percent. Net: about minus 13.5.
+
+73
+00:14:01,000 --> 00:14:17,700
+Layout B, as first drawn, was slightly better: L over D 21.6, versus 21.3. But its wing stalled before the foreplane. That's unsafe. You want the front wing to stall first, so the nose drops and the airplane recovers.
+
+74
+00:14:18,000 --> 00:14:33,100
+So we swept foreplane size and position. Bigger foreplanes lost range, up to 7.5 percent. The best was small: 4 square meters, 7 meters back, plus a tail shrunk to 4.8 square meters. That's B-opt.
+
+75
+00:14:33,400 --> 00:14:42,900
+B-opt versus the baseline, both at 15 percent static margin: L over D 21.60, versus 21.28. A gain of 1.5 percent.
+
+76
+00:14:43,200 --> 00:14:53,900
+Good news first. B-opt's foreplane does stall first, the safe behavior. The cost is a higher stall speed: 45.1 meters per second, versus 43.0.
+
+77
+00:14:54,200 --> 00:15:13,300
+The weak point is takeoff rotation. With an elevator only on the small tail, the nose wheel doesn't lift until about 54 meters per second, against a target of 49.6. Every fix, like a foreplane flap or a bigger tail, eats into that 1.5 percent.
+
+78
+00:15:13,600 --> 00:15:24,700
+Engine-out handling is fine. With an outboard motor out, it needs only 8.8 degrees of rudder, versus 11.1 for the baseline. And climb is unchanged.
+
+79
+00:15:25,000 --> 00:15:37,300
+AVL's verdict: a canard replacing the tail is clearly worse. A small foreplane plus a smaller tail is a small, fragile gain, inside the uncertainty of our geometry.
+
+80
+00:15:37,600 --> 00:15:40,800
+Part 7: CFD setup.
+
+81
+00:15:41,100 --> 00:15:56,200
+AVL is fast, but it can't see the fuselage, the motor pods, the struts, viscosity, or real stall. So next: CFD, computational fluid dynamics. A full simulation of the air flowing around the whole airplane.
+
+82
+00:15:56,500 --> 00:16:09,600
+We used OpenFOAM, solving the steady RANS equations with the k-omega SST turbulence model, at 80 meters per second, at 3,000-meter conditions. That's a Reynolds number of about 8.4 million.
+
+83
+00:16:09,900 --> 00:16:24,200
+To save memory, we simulate only half the airplane, with a symmetry plane down the middle. And angle of attack is set by tilting the incoming air, so one mesh serves every angle.
+
+84
+00:16:24,500 --> 00:16:39,200
+The space around the airplane is chopped into small cells. That's the mesh. A coarse mesh had about 1.1 million cells. A medium mesh, about 2.3 million. Finer meshes are more accurate, but slower.
+
+85
+00:16:39,500 --> 00:16:50,600
+Each case ran on 6 cores, one at a time, because memory was limited to 15 gigabytes. 1,500 iterations per case, in an overnight queue.
+
+86
+00:16:50,900 --> 00:17:04,400
+One snag: OpenFOAM's built-in force tools crashed in this build. So we wrote our own script, forces dot py, that adds up pressure and skin friction from the saved flow fields.
+
+87
+00:17:04,700 --> 00:17:17,000
+We ran the baseline, B-opt, and the 10 square meter canard, C10, at angles from 0 to 16 degrees, with the control surfaces left at zero. So, untrimmed.
+
+88
+00:17:17,300 --> 00:17:20,500
+Part 8: CFD results.
+
+89
+00:17:20,800 --> 00:17:37,900
+The first coarse-mesh results were a shock. L over D around 13, instead of AVL's 21. And the wing was separating early, at just 4 to 8 degrees. Separation means the air peels off the surface instead of following it.
+
+90
+00:17:38,200 --> 00:17:45,300
+So: was the airplane bad, or was the mesh bad? We checked by refining it.
+
+91
+00:17:45,600 --> 00:17:58,700
+Here's the baseline at 8 degrees. Red marks reversed flow on the upper wing. On the coarse mesh, 47 percent of the wing. On the medium mesh, just 10 percent.
+
+92
+00:17:59,000 --> 00:18:12,900
+Lift rose from 0.915 to 1.128. Drag fell 39 percent. And L over D doubled, from 6.2 to 12.5. So most of that early separation was a mesh error, not real physics.
+
+93
+00:18:13,200 --> 00:18:19,100
+Drag still isn't fully converged, so treat the absolute numbers as conservative.
+
+94
+00:18:19,400 --> 00:18:30,100
+Corrected for the medium mesh, cruise L over D is about 15.0 for the baseline, and 14.9 for B-opt. Versus about 21 in AVL.
+
+95
+00:18:30,400 --> 00:18:38,300
+CFD can't tell A and B-opt apart. So B-opt's 1.5 percent gain is neither confirmed nor refuted.
+
+96
+00:18:38,600 --> 00:18:56,900
+Why 15, and not 21? Partly the mesh. But also real interference drag that AVL's build-up misses. At zero degrees, the struts add about 63 drag counts, the pods 75, and the fuselage 62. A drag count is one ten-thousandth of drag coefficient.
+
+97
+00:18:57,200 --> 00:19:08,300
+Here's the surface pressure on the baseline at 8 degrees, on the coarse mesh. Blue is suction, low pressure. That's where the lift comes from.
+
+98
+00:19:08,600 --> 00:19:24,100
+And the canard? Untrimmed, C10 looks about 4 to 5 percent better than the baseline. But to trim, it has to deflect the foreplane, and AVL says that costs about 14 percent. Trimmed, it's not better.
+
+99
+00:19:24,400 --> 00:19:37,900
+CFD also confirms the foreplanes stall first, the safe order. But they lift less than AVL predicts. On B-opt, the foreplane's lift slope is only about a third of AVL's value.
+
+100
+00:19:38,200 --> 00:19:43,700
+By 12 degrees, all three layouts make nearly the same lift.
+
+101
+00:19:44,000 --> 00:20:02,300
+On the medium mesh, the baseline looks more stable than the coarse mesh suggested: about 74 percent of AVL's stability slope. So our earlier warning, about moving the balance point forward, was probably too pessimistic. That isn't re-checked yet for B-opt and C10.
+
+102
+00:20:02,600 --> 00:20:12,100
+And the separation that remains sits just behind, and outboard of, the two places where the motor pods meet the wing.
+
+103
+00:20:12,400 --> 00:20:24,300
+Pod drag barely changes with the mesh, so this may be a real feature of this pod placement. It's worth a closer look with a finer mesh.
+
+104
+00:20:24,600 --> 00:20:28,100
+Part 9: What we got wrong.
+
+105
+00:20:28,400 --> 00:20:35,100
+Now the honest part: what we got wrong, and what we still don't know.
+
+106
+00:20:35,400 --> 00:20:56,900
+A parameter mix-up in OpenVSP made the motor pods in the first CAD export twice the intended diameter. We found it and fixed it. Measured on the CFD meshes, the pods are the right 0.8 meters, so the CFD used the correct geometry. We'd said otherwise earlier, and that was wrong.
+
+107
+00:20:57,200 --> 00:21:12,300
+The mesh isn't converged: drag still moves 16 to 39 percent per refinement. One canard case, at 16 degrees, diverged and wasn't re-run. And there are no propellers, no landing gear, and no trimmed CFD.
+
+108
+00:21:12,600 --> 00:21:24,500
+And underneath it all: the geometry is estimated from photos, the masses are assumptions, and the battery and structure numbers use typical datasheet values, not test data.
+
+109
+00:21:24,800 --> 00:21:28,000
+Part 10: Conclusions.
+
+110
+00:21:28,300 --> 00:21:34,600
+So, what can a laptop tell you about an electric airliner? Four things.
+
+111
+00:21:34,900 --> 00:21:46,800
+One: the battery limits the mission. 360 kilowatt-hours gives about 105 to 125 kilometers with no reserve, and can't carry one. Silicon-anode cells are the product path.
+
+112
+00:21:47,100 --> 00:21:58,200
+Two: a structural wing battery could save roughly 250 to 380 kilograms. But it needs bare, primed cell cans, and a long road to certification.
+
+113
+00:21:58,500 --> 00:22:13,600
+Three: a canard replacing the tail costs about 14 percent of range. A small foreplane plus a smaller tail gains 1.5 percent in AVL, and ties in CFD. On this evidence, not worth the complexity.
+
+114
+00:22:13,900 --> 00:22:23,400
+Four: real-world L over D is probably nearer 15 than 21. Interference drag matters, and the pod-wing junctions deserve design attention.
+
+115
+00:22:23,700 --> 00:22:40,000
+Next steps: a finer mesh and a proper convergence study. Medium-mesh runs at high angles for B-opt and C10. Trimmed CFD, with propeller slipstream. A fairing study for the pod junctions. And real tests of the cell-potting bond.
+
+116
+00:22:40,300 --> 00:22:50,200
+One last reminder: everything here is an independent estimate, built from public data. It is not Heart Aerospace data. Thanks for watching.

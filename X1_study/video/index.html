@@ -1,0 +1,1067 @@
+<title>X1 on a Laptop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#070C16; --board:#0B1322; --paper:#0E182B; --panel:#101A2C; --line:#22304A; --muted:#8B97B0;
+  /* ink, muted, faint, and the semantic accents */
+  --w:#EEF2FA; --d:#8B97B0; --f:#33415E;
+  --y:#FFD166; /* key point */  --o:#FFA552; /* energy, battery */  --b:#6CCFF6; /* airflow, CFD */
+  --g:#7BE0AD; /* good */       --p:#FF6B81; /* bad, risk */       --v:#B49CFF; /* foreplane */
+  --hand:"Kalam", "Segoe Print", "Comic Sans MS", cursive;
+  --mono:"JetBrains Mono", Consolas, monospace;
+  --ui:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+html,body{background:var(--bg);color:var(--w);font-family:var(--ui)}
+body{padding-inline:16px;padding-block:20px 48px}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+button:focus-visible,.bar:focus-visible{outline:2px solid var(--y);outline-offset:2px}
+
+#player{max-width:1200px;margin:0 auto;display:flex;flex-direction:column}
+.viewport{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:var(--board);border-radius:10px 10px 0 0;overflow:hidden;container-type:inline-size;border:1px solid var(--line);border-bottom:0}
+#board{position:absolute;inset:0;width:100%;height:100%;display:block}
+#board text{font-family:var(--hand)}
+#board text.mono{font-family:var(--mono)}
+.caption{position:absolute;left:50%;bottom:3.2cqw;transform:translateX(-50%);max-width:82%;background:rgba(5,9,18,.82);color:#fff;font-family:var(--ui);font-size:max(12px,2.05cqw);line-height:1.35;padding:.35em .7em;border-radius:4px;text-align:center;text-wrap:balance}
+.caption.off{display:none}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:0 0 10px 10px}
+.btn{background:#16223A;border:1px solid var(--line);border-radius:6px;height:36px;min-width:36px;padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:13px}
+.btn:hover{border-color:var(--muted)}
+.btn[aria-pressed="true"]{border-color:var(--y);color:var(--y)}
+.btn.primary{background:var(--y);color:#1d1600;border-color:var(--y);font-weight:700;min-width:84px}
+.btn svg{width:16px;height:16px;fill:currentColor}
+.bar{flex:1 1 220px;height:36px;position:relative;cursor:pointer;display:flex;align-items:center}
+.bar .track{position:absolute;left:0;right:0;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--y)}
+.bar .tick{position:absolute;top:0;bottom:0;width:2px;background:var(--panel)}
+.time{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chapters{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chap{background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--muted);cursor:pointer}
+.chap.cur{border-color:var(--y);color:var(--w);background:rgba(255,209,102,.1)}
+.meta{max-width:1200px;margin:22px auto 0;color:var(--muted);font-size:14px;line-height:1.6}
+.meta h1{font-family:var(--hand);font-weight:700;color:var(--w);font-size:26px;margin:0 0 4px}
+.meta kbd{font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--w)}
+details{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+summary{cursor:pointer;color:var(--w);font-weight:700}
+.script h3{font-family:var(--hand);color:var(--y);font-size:19px;margin:20px 0 6px}
+.script p{margin:0 0 8px;max-width:70ch}
+.script .ts{font-size:11.5px;color:var(--y);margin-right:8px;font-variant-numeric:tabular-nums}
+
+#player:fullscreen{background:#000;justify-content:center;align-items:center;padding:16px}
+#player:fullscreen > *{width:min(100%, calc((100vh - 110px) * 16 / 9))}
+#player:fullscreen .chapters{display:none}
+
+/* hand-drawn animation */
+.draw{stroke-dasharray:1 1;stroke-dashoffset:1;animation:draw var(--du) ease-out var(--dl) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.write{clip-path:inset(0 100% 0 0);animation:write var(--du) linear var(--dl) forwards}
+@keyframes write{to{clip-path:inset(0 0 0 0)}}
+.fade{opacity:0;animation:fade var(--du) ease var(--dl) forwards}
+@keyframes fade{to{opacity:var(--op,1)}}
+@media (prefers-reduced-motion: reduce){
+  .draw,.write,.fade{animation-duration:.01s !important;animation-delay:0s !important}
+}
+
+/* recording mode: the board alone, filling the window */
+html.rec,html.rec body{margin:0;padding:0;background:var(--board);overflow:hidden}
+html.rec #player{max-width:none}
+html.rec .viewport{position:fixed;inset:0;border:0;border-radius:0;aspect-ratio:auto}
+html.rec .controls,html.rec .chapters,html.rec .meta,html.rec .caption{display:none}
+</style>
+
+<div id="player">
+  <div class="viewport" id="vp">
+    <svg id="board" viewBox="0 0 1280 720" role="img" aria-label="Hand-drawn explainer animation">
+      <defs>
+        <filter id="glow" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/>
+          <feComponentTransfer in="b" result="g"><feFuncA type="linear" slope=".5"/></feComponentTransfer>
+          <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="cpgrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#3B4CC0"/><stop offset=".5" stop-color="#E6E6E6"/><stop offset="1" stop-color="#B40426"/>
+        </linearGradient>
+      </defs>
+      <image href="assets/board.png" x="0" y="0" width="1280" height="720" preserveAspectRatio="none"/>
+      <g id="media"></g>
+      <g id="ink" filter="url(#glow)"></g>
+      <g id="chrome"></g>
+    </svg>
+    <div class="caption" id="cap" aria-live="polite"></div>
+  </div>
+  <div class="controls">
+    <button class="btn" id="prev" aria-label="Previous step" title="Previous (←)"><svg viewBox="0 0 16 16"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+    <button class="btn primary" id="play" aria-label="Play"><svg viewBox="0 0 16 16" id="playIcon"><path d="M4 2l10 6-10 6z"/></svg><span id="playLbl">Play</span></button>
+    <button class="btn" id="next" aria-label="Next step" title="Next (→)"><svg viewBox="0 0 16 16"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+    <div class="bar" id="bar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="track"><div class="fill" id="fill"></div></div></div>
+    <span class="time" id="time">0:00 / 0:00</span>
+    <button class="btn" id="voice" aria-pressed="false" title="Voice-over (V)">Voice</button>
+    <button class="btn" id="cc" aria-pressed="true" title="Captions (C)">CC</button>
+    <button class="btn" id="fs" title="Fullscreen (F)" aria-label="Fullscreen"><svg viewBox="0 0 16 16"><path d="M1 1h5v2H3v3H1zM10 1h5v5h-2V3h-3zM1 10h2v3h3v2H1zM13 10h2v5h-5v-2h3z"/></svg></button>
+  </div>
+  <div class="chapters" id="chaps"></div>
+</div>
+
+<div class="meta">
+  <h1>Redesigning an Electric Airliner on a Laptop</h1>
+  An independent study of the Heart Aerospace X1. All numbers are estimates from OpenVSP, AVL, Python/Octave and OpenFOAM, not Heart data.
+  Press <kbd>Space</kbd> to play or pause. <kbd>←</kbd> and <kbd>→</kbd> step through; a presentation clicker's Page Up and Page Down do the same. <kbd>F</kbd> goes fullscreen, <kbd>V</kbd> turns on the browser's voice-over, <kbd>C</kbd> toggles captions.
+  <details>
+    <summary>Speaker script</summary>
+    <div class="script" id="script"></div>
+  </details>
+</div>
+
+<script>
+/* ---------- sketchy drawing kit ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (tag, a = {}) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); return e; };
+const col = o => `var(--${(o && o.c) || 'w'})`;
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function seg(r, x1, y1, x2, y2, bend = 0) {
+  const j = v => v + (r() - .5) * 3;
+  const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+  const b = bend + (r() - .5) * len * .03;
+  const cx = (x1 + x2) / 2 + nx * b, cy = (y1 + y2) / 2 + ny * b;
+  return { d: `M${j(x1)} ${j(y1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${j(x2)} ${j(y2)}`, cx, cy };
+}
+function stroke(d, o, w, op = 1) {
+  const p = mk('path', { d, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  p.style.stroke = col(o); p.style.strokeWidth = w; p.style.setProperty('--op', op); p.style.opacity = op;
+  // dashed strokes fade in; solid ones trace, which needs a normalised path length
+  if (o && o.dash) { p.setAttribute('stroke-dasharray', o.dash === true ? '9 8' : o.dash); p.dataset.fade = 1; } else p.setAttribute('pathLength', 1);
+  return p;
+}
+const twoPass = (o, f) => o.single ? [stroke(f(), o, o.w || 3, o.op ?? 1)] : [stroke(f(), o, o.w || 3, o.op ?? 1), stroke(f(), o, (o.w || 3) * .45, .38 * (o.op ?? 1))];
+// an opaque paper-coloured fill tinted toward the colour (fill), or a see-through wash (tint)
+function fillEl(d, o) {
+  if (o.fill == null && o.tint == null) return [];
+  const p = mk('path', { d }), c = `var(--${o.fc || o.c || 'w'})`;
+  let op = 1;
+  if (o.tint != null) { p.style.fill = c; op = o.tint; } else p.style.fill = `color-mix(in srgb, ${c} ${Math.round(o.fill * 100)}%, var(--paper))`;
+  p.style.setProperty('--op', op); p.style.opacity = op; p.dataset.fade = 1;
+  return [p];
+}
+const rectD = (x, y, w, h) => `M${x} ${y}H${x + w}V${y + h}H${x}Z`;
+const L = (x1, y1, x2, y2, o = {}) => ({ dur: .4, build: r => twoPass(o, () => seg(r, x1, y1, x2, y2, o.bend || 0).d) });
+const R = (x, y, w, h, o = {}) => ({ dur: .7, build: r => [...fillEl(rectD(x, y, w, h), o), ...twoPass(o, () => [seg(r, x - 3, y, x + w + 3, y), seg(r, x + w, y - 3, x + w, y + h + 3), seg(r, x + w + 3, y + h, x - 3, y + h), seg(r, x, y + h + 3, x, y - 3)].map(s => s.d).join(' '))] });
+const rrD = (r, x, y, w, h, q, j = 1.1) => { const J = v => (v + (r() - .5) * j * 2).toFixed(1); return `M${J(x + q)} ${J(y)} L${J(x + w - q)} ${J(y)} Q${x + w} ${y} ${J(x + w)} ${J(y + q)} L${J(x + w)} ${J(y + h - q)} Q${x + w} ${y + h} ${J(x + w - q)} ${J(y + h)} L${J(x + q)} ${J(y + h)} Q${x} ${y + h} ${J(x)} ${J(y + h - q)} L${J(x)} ${J(y + q)} Q${x} ${y} ${J(x + q)} ${J(y)}`; };
+const RR = (x, y, w, h, o = {}) => ({ dur: .8, build: r => [...fillEl(rrD(() => .5, x, y, w, h, o.q ?? 14, 0), o), ...twoPass(o, () => rrD(r, x, y, w, h, o.q ?? 14))] });
+const ellD = (r, cx, cy, rx, ry) => { const a0 = r() * 6.28, n = 40; let d = ''; for (let i = 0; i <= n; i++) { const a = a0 + (6.28 + .35) * i / n, k = 1 + (r() - .5) * .04; d += (i ? 'L' : 'M') + (cx + Math.cos(a) * rx * k).toFixed(1) + ' ' + (cy + Math.sin(a) * ry * k).toFixed(1); } return d; };
+const E = (cx, cy, rx, ry, o = {}) => ({ dur: .6, build: r => [...fillEl(ellD(() => .5, cx, cy, rx, ry), o), stroke(ellD(r, cx, cy, rx, ry), o, o.w || 3, o.op ?? 1)] });
+// a smooth wobble along dense outline points, so long curves stay hand-made but not jagged
+const ptsD = (r, pts, closed, amp = .9) => { const p1 = r() * 6.28, p2 = r() * 6.28, f = .07 + r() * .05; return pts.map(([x, y], i) => (i ? 'L' : 'M') + (x + Math.sin(i * f + p1) * amp).toFixed(1) + ' ' + (y + Math.sin(i * f * 1.3 + p2) * amp).toFixed(1)).join(' ') + (closed ? ' Z' : ''); };
+const OUT = (pts, o = {}) => ({ dur: o.dur || .8, build: r => [...(o.open ? [] : fillEl(ptsD(() => 0, pts, true, 0), o)), ...twoPass(o, () => ptsD(r, pts, !o.open, o.amp ?? .8))] });
+const A = (x1, y1, x2, y2, o = {}) => ({ dur: .5, build: r => {
+  const s = seg(r, x1, y1, x2, y2, o.bend || 0), ang = Math.atan2(y2 - s.cy, x2 - s.cx), h = o.h || 15;
+  const head = `M${x2 - h * Math.cos(ang - .45)} ${y2 - h * Math.sin(ang - .45)} L${x2} ${y2} L${x2 - h * Math.cos(ang + .45)} ${y2 - h * Math.sin(ang + .45)}`;
+  return [stroke(s.d + ' ' + head, o, o.w || 2.8, o.op ?? 1)];
+} });
+const P = (d, o = {}) => ({ dur: o.dur || .8, build: () => [...fillEl(d, o), stroke(d, o, o.w || 3, o.op ?? 1)] });
+const XM = (x, y, o = {}) => { const k = o.k || 11; return { dur: .35, build: r => [stroke(seg(r, x - k, y - k, x + k, y + k).d + ' ' + seg(r, x + k, y - k, x - k, y + k).d, { c: 'p', ...o }, 3.4)] }; };
+const CK = (x, y, o = {}) => { const k = o.k || 1; return { dur: .35, build: () => [stroke(`M${x - 12 * k} ${y} L${x - 3 * k} ${y + 11 * k} L${x + 15 * k} ${y - 13 * k}`, { c: 'g', ...o }, 3.6)] }; };
+const HATCH = (x, y, w, h, o = {}) => ({ dur: .9, build: r => { let d = ''; const g = o.gap || 16; for (let i = 8; i < w + h; i += g) { const x1 = x + Math.min(i, w), y1 = y + Math.max(0, i - w), x2 = x + Math.max(0, i - h), y2 = y + Math.min(i, h); d += seg(r, x1, y1, x2, y2).d + ' '; } return [stroke(d, o, o.w || 1.8, o.op ?? .75)]; } });
+
+/* ---------- type ---------- */
+const meas = (() => { const c = document.createElement('canvas').getContext('2d'); return (str, s, o = {}) => { c.font = `${o.b ? 700 : 400} ${s}px ${o.mono ? '"JetBrains Mono"' : 'Kalam'}`; return c.measureText(str).width; }; })();
+const TW = (str, s, o = {}) => str.length * s * (o.mono ? .6 : o.b ? .47 : .45);   // layout-time estimate
+const T = (x, y, str, o = {}) => ({ dur: Math.min(1.7, Math.max(.35, str.length * .045)), text: true, str, build: () => {
+  const t = mk('text', { x, y, 'text-anchor': { m: 'middle', e: 'end' }[o.a] || 'start', 'font-size': o.s || 28, 'font-weight': o.b ? 700 : 400 });
+  if (o.mono) t.setAttribute('class', 'mono');
+  if (o.ls) t.setAttribute('letter-spacing', o.ls);
+  if (o.outline) { t.style.fill = 'none'; t.style.stroke = col(o); t.style.strokeWidth = o.sw || 2.2; t.style.strokeLinejoin = 'round'; }
+  else t.style.fill = col(o);
+  if (o.op != null) t.style.opacity = o.op;
+  t.textContent = str; return [t];
+} });
+// headline with a hand-drawn underline swash
+const H = (s, o = {}) => [T(80, 92, s, { c: 'y', s: 40, b: 1 }), { dur: .45, build: r => { const w = Math.min(meas(s, 40, { b: 1 }), 900), y = 108; return [stroke(`M${80 + (r() - .5) * 2} ${y + 1} Q${80 + w * .5} ${y - 4 + r() * 3} ${80 + w + 6} ${y + 2}`, { c: 'y' }, 2.4, .9)]; } }];
+// a translucent highlighter swipe, drawn before the text it marks
+const HL = (x, y, w, o = {}) => ({ dur: .4, build: r => [stroke(seg(r, x - 4, y - 9, x + w + 4, y - 9, -2).d, { c: o.c || 'y' }, o.h || 17, o.op ?? .2)] });
+// a small rounded label
+const CHIP = (x, cy, str, o = {}) => { const s = o.s || 18; return { dur: .6, text: true, str, build: r => {
+  const w = meas(str, s, o) + (o.px || 14) * 2, h = s + 14, x0 = o.a === 'e' ? x - w : o.a === 'm' ? x - w / 2 : x;
+  const t = mk('text', { x: x0 + w / 2, y: cy + s * .36, 'text-anchor': 'middle', 'font-size': s, 'font-weight': o.b ? 700 : 400 });
+  if (o.mono) t.setAttribute('class', 'mono');
+  t.style.fill = col(o); t.textContent = str;
+  t.dataset.fade = 1;
+  return [...fillEl(rrD(() => .5, x0, cy - h / 2, w, h, h / 2, 0), { c: o.c, tint: o.tint ?? .14 }), stroke(rrD(r, x0, cy - h / 2, w, h, h / 2, .6), o, 1.6, .9), t];
+} }; };
+// a big number with its unit and a caption under it
+const STAT = (x, y, num, unit, cap, o = {}) => { const s = o.s || 64, a = o.a || 's', w = TW(num, s, { b: 1 }) + (unit ? TW(unit, s * .42) + 10 : 0), x0 = a === 'm' ? x - w / 2 : a === 'e' ? x - w : x;
+  return [T(x0, y, num, { c: o.c || 'w', s, b: 1 }), unit ? { dur: .4, text: true, str: unit, build: () => { const t = mk('text', { x: x0 + meas(num, s, { b: 1 }) + 10, y, 'font-size': s * .42 }); t.style.fill = col({ c: o.c || 'w' }); t.textContent = unit; return [t]; } } : [],
+    cap ? T(a === 'm' ? x : x0, y + s * .5 + 4, cap, { c: o.cc || 'd', s: o.cs || 22, a: a === 'm' ? 'm' : 's' }) : []]; };
+const DOT = (x, y, rad = 4, o = {}) => ({ dur: .2, build: () => fillEl(ellD(() => .5, x, y, rad, rad), { c: o.c || 'w', tint: o.op ?? 1 }) });
+// bullet list; marker: dot | check | cross | dash | num
+const BUL = (x, y, items, o = {}) => items.map((it, k) => { const yy = y + k * (o.gap || 44), c = o.c || 'w', m = o.marker || 'dot';
+  const mark = m === 'check' ? CK(x + 8, yy - 9, { k: .8 }) : m === 'cross' ? XM(x + 8, yy - 9, { k: 8 }) : m === 'dash' ? L(x, yy - 9, x + 16, yy - 9, { c: o.mc || 'y', single: true, w: 2.4 }) : m === 'num' ? T(x, yy, (k + 1) + '.', { c: o.mc || 'y', s: o.s || 26, b: 1 }) : DOT(x + 6, yy - 9, 4, { c: o.mc || 'y' });
+  return [mark, T(x + (o.ind || 30), yy, it, { s: o.s || 26, c })]; });
+// dimension line with arrowheads at both ends
+const DIM = (x1, y1, x2, y2, o = {}) => ({ dur: .6, build: () => {
+  const ang = Math.atan2(y2 - y1, x2 - x1), h = 9;
+  const hd = (x, y, a) => `M${x + h * Math.cos(a + .42)} ${y + h * Math.sin(a + .42)} L${x} ${y} L${x + h * Math.cos(a - .42)} ${y + h * Math.sin(a - .42)}`;
+  return [stroke(`M${x1} ${y1} L${x2} ${y2} ` + hd(x1, y1, ang) + ' ' + hd(x2, y2, ang + Math.PI), { c: o.c || 'd' }, 1.5, .9)];
+} });
+const DIMX = (x1, x2, y, label, o = {}) => [L(x1, y - 14, x1, y + 6, { c: 'd', single: true, w: 1.2, op: .7 }), L(x2, y - 14, x2, y + 6, { c: 'd', single: true, w: 1.2, op: .7 }), DIM(x1, y, x2, y), T((x1 + x2) / 2, o.above ? y - 10 : y + 26, label, { c: o.c || 'd', s: o.s || 20, a: 'm', mono: o.mono })];
+const DIMY = (x, y1, y2, label, o = {}) => [L(x - 14, y1, x + 6, y1, { c: 'd', single: true, w: 1.2, op: .7 }), L(x - 14, y2, x + 6, y2, { c: 'd', single: true, w: 1.2, op: .7 }), DIM(x, y1, x, y2), T(x + 14, (y1 + y2) / 2 + 7, label, { c: o.c || 'd', s: o.s || 20, mono: o.mono })];
+// leader line from a label to a point on a drawing
+const LEAD = (x1, y1, x2, y2, o = {}) => [L(x1, y1, x2, y2, { c: o.c || 'd', single: true, w: 1.4, op: .85 }), DOT(x2, y2, 3.2, { c: o.c || 'd' })];
+
+/* ---------- small icons ---------- */
+const BATT = (x, y, w, h, frac, o = {}) => [RR(x, y, w, h, { c: o.c || 'o', q: 8, w: 2.6, fill: .08 }), R(x + w, y + h * .32, w * .05, h * .36, { c: o.c || 'o', single: true, w: 2.2 }),
+  frac > 0 ? R(x + 7, y + 7, (w - 14) * frac, h - 14, { c: o.c || 'o', tint: .35, single: true, w: 1.2 }) : []];
+const CYL = (x, y, w, h, o = {}) => ({ dur: .8, build: r => [...fillEl(`M${x} ${y} L${x} ${y + h} Q${x + w / 2} ${y + h + w / 3} ${x + w} ${y + h} L${x + w} ${y} Z`, o),
+  ...twoPass(o, () => ellD(r, x + w / 2, y, w / 2, w / 6) + ' ' + seg(r, x, y, x, y + h).d + ' ' + seg(r, x + w, y, x + w, y + h).d + ` M${x} ${y + h} Q${x + w / 2} ${y + h + w / 3} ${x + w} ${y + h}`)] });
+const LAPTOP = (x, y, w, o = {}) => { const h = w * .6; return [RR(x, y, w, h, { c: o.c || 'w', q: 10, fill: .05 }), P(`M${x - w * .08} ${y + h + 4} L${x + w * 1.08} ${y + h + 4} L${x + w * 1.14} ${y + h + w * .07} L${x - w * .14} ${y + h + w * .07} Z`, { c: o.c || 'w', w: 2.6, fill: .05 })]; };
+const MOON = (x, y, rad, o = {}) => P(`M${x} ${y - rad} A ${rad} ${rad} 0 1 0 ${x + rad * .9} ${y + rad * .7} A ${rad * .78} ${rad * .78} 0 1 1 ${x} ${y - rad} Z`, { c: o.c || 'y', w: 2.6, tint: .12 });
+// the classic quartered centre-of-gravity symbol
+const CG = (x, y, rad = 13, o = {}) => ({ dur: .5, build: r => [...fillEl(`M${x} ${y} L${x + rad} ${y} A ${rad} ${rad} 0 0 1 ${x} ${y + rad} Z M${x} ${y} L${x - rad} ${y} A ${rad} ${rad} 0 0 1 ${x} ${y - rad} Z`, { c: o.c || 'w', tint: 1 }), stroke(ellD(r, x, y, rad, rad), { c: o.c || 'w' }, 2.4)] });
+// a rising wavy heat arrow
+const HEAT = (x, y, len, o = {}) => ({ dur: .6, build: () => { let d = `M${x} ${y}`; for (let i = 1; i <= 12; i++) d += ` L${(x + Math.sin(i * 1.3) * 4).toFixed(1)} ${(y - len * i / 12).toFixed(1)}`; const yt = y - len; return [stroke(d + ` M${x - 7} ${yt + 9} L${x} ${yt} L${x + 7} ${yt + 9}`, { c: o.c || 'o' }, 2.4)]; } });
+
+/* ---------- more pieces: meshes, ground, ghosting, legends ---------- */
+const GRID = (x, y, w, h, step, o = {}) => ({ dur: .9, build: r => { let d = ''; for (let i = 0; i <= w + .1; i += step) d += seg(r, x + i, y, x + i, y + h).d + ' '; for (let j = 0; j <= h + .1; j += step) d += seg(r, x, y + j, x + w, y + j).d + ' '; return [stroke(d, o, o.w || 1.2, o.op ?? .7)]; } });
+// a hex mesh refined around the body, like snappyHexMesh
+const MESH = (x, y, w, h, step, o = {}) => ({ dur: 1, build: r => {
+  let d = ''; const ln = (a, b, c, e) => { d += `M${a.toFixed(1)} ${b.toFixed(1)} L${c.toFixed(1)} ${e.toFixed(1)} `; };
+  for (let i = 0; i <= w + .1; i += step) ln(x + i, y, x + i, y + h);
+  for (let j = 0; j <= h + .1; j += step) ln(x, y + j, x + w, y + j);
+  const ix0 = x + Math.round(w * .2 / step) * step, ix1 = x + Math.round(w * .8 / step) * step, iy0 = y + Math.round(h * .3 / step) * step, iy1 = y + Math.round(h * .7 / step) * step;
+  for (let i = ix0 + step / 2; i < ix1; i += step) ln(i, iy0, i, iy1);
+  for (let j = iy0 + step / 2; j < iy1; j += step) ln(ix0, j, ix1, j);
+  return [stroke(d, o, o.w || 1.1, o.op ?? .75)];
+} });
+const GROUND = (x1, x2, y, o = {}) => ({ dur: .6, build: r => { let d = seg(r, x1, y, x2, y).d; for (let x = x1 + 10; x < x2; x += 22) d += ` M${x} ${y + 2} L${x - 9} ${y + 11}`; return [stroke(d, { c: o.c || 'd' }, 1.5, .8)]; } });
+// a see-through sheet of board over part of a drawing
+const GHOST = (x, y, w, h, op = .78) => ({ dur: .5, build: () => { const p = mk('path', { d: rectD(x, y, w, h) }); p.style.fill = 'var(--board)'; p.style.setProperty('--op', op); p.style.opacity = op; p.dataset.fade = 1; return [p]; } });
+const GRAD = (x, y, w, h, id) => ({ dur: .5, build: () => { const p = mk('rect', { x, y, width: w, height: h, rx: 3 }); p.style.fill = `url(#${id})`; p.dataset.fade = 1; return [p]; } });
+// a few hand-placed stream lines past a small section, for icons
+const STREAMS = (x, y, w, o = {}) => [-1, 0, 1].map(k => P(`M${x - w / 2} ${y + k * w * .16} C ${x - w * .2} ${y + k * w * .16 - w * .02}, ${x - w * .05} ${y + k * w * .2 - w * .1}, ${x + w * .15} ${y + k * w * .18 - w * .06} S ${x + w * .4} ${y + k * w * .16}, ${x + w / 2} ${y + k * w * .16}`, { c: o.c || 'b', w: 1.8, dur: .3 }));
+
+/* ---------- the X1, drawn from the study's estimated geometry (metres) ---------- */
+const lin = (a, b, n) => Array.from({ length: n + 1 }, (_, i) => a + (b - a) * i / n);
+const capsule = (x0, x1, r0, nose = .6, tail = .12, tl = .8) => x => x < x0 + nose ? r0 * Math.sqrt(Math.max(0, 1 - ((x0 + nose - x) / nose) ** 2)) : x < x1 - tl ? r0 : r0 - (r0 - tail) * (x - (x1 - tl)) / tl;
+const shape = (f, x0, x1, cy, n = 40) => { const xs = lin(x0, x1, n); return [...xs.map(x => [x, cy - f(x)]), ...xs.slice().reverse().map(x => [x, cy + f(x)])]; };
+const NACA = (m, p, t, n = 36) => {   // 4-digit section, chord 1, returns closed outline from TE over the top and back
+  const up = [], lo = [];
+  for (let i = 0; i <= n; i++) {
+    const x = (1 - Math.cos(Math.PI * i / n)) / 2;
+    const yt = 5 * t * (.2969 * Math.sqrt(x) - .126 * x - .3516 * x * x + .2843 * x ** 3 - .1036 * x ** 4);
+    const yc = x < p ? m / p / p * (2 * p * x - x * x) : m / (1 - p) ** 2 * (1 - 2 * p + 2 * p * x - x * x);
+    const dy = x < p ? 2 * m / p / p * (p - x) : 2 * m / (1 - p) ** 2 * (p - x), th = Math.atan(dy);
+    up.push([x - yt * Math.sin(th), yc + yt * Math.cos(th)]); lo.push([x + yt * Math.sin(th), yc - yt * Math.cos(th)]);
+  }
+  return [...up.reverse(), ...lo.slice(1)];
+};
+const N4415 = NACA(.04, .4, .15), N0012 = NACA(0, .4, .12);
+const fuseW = x => x < 3.2 ? 1.15 * Math.sqrt(Math.max(0, 1 - (1 - x / 3.2) ** 2)) : x < 13.5 ? 1.15 : 1.15 - .8 * ((x - 13.5) / 7.3) ** 1.4;
+const wingLE = y => 8.6 + .31 * Math.abs(y) / 16.15, wingC = y => 2.5 - 1.25 * Math.abs(y) / 16.15;
+const PODS = [-7.8, -3.8, 3.8, 7.8];
+
+// top view, nose left (flip: nose right). o: c, wing, pods, tail (area factor, 0 = none), fore (m²), fx, forec, tailc, dims, simple, box
+function X1TOP(cx, cy, k, o = {}) {
+  const dir = o.flip ? -1 : 1, X = x => cx + dir * (x - 11.3) * k, Y = y => cy + y * k, tp = pts => pts.map(([x, y]) => [X(x), Y(y)]);
+  const c = o.c || 'w', w = o.w || (k < 5 ? 1.8 : 2.4), base = { w, single: k < 5, amp: k < 6 ? .4 : .8 };
+  const part = (pts, cc, extra = {}) => OUT(tp(pts), { ...base, c: cc, fill: .1, ...extra });
+  const ops = [];
+  ops.push(part(shape(x => .14 * Math.min(1, (x - 16.4) / 1.5) * (x < 22.4 ? 1 : (22.6 - x) / .2), 16.4, 22.6, 0, 16), c));           // fin, seen from above
+  ops.push(E(X(10.8), Y(-1.25), 2.3 * k, .42 * k, { c, w: w * .8, fill: .1 }), E(X(10.8), Y(1.25), 2.3 * k, .42 * k, { c, w: w * .8, fill: .1 }));   // sponsons
+  ops.push(part(shape(fuseW, 0, 20.8, 0, 60), c, { dur: 1 }));
+  if (o.fore) { const b = Math.sqrt(5.5 * o.fore) / 2, ch = o.fore / (2 * b), fx = o.fx;
+    ops.push(part([[fx + .1 * ch, -b], [fx + ch * .95, -b], [fx + ch * 1.15, 0], [fx + ch * .95, b], [fx + .1 * ch, b], [fx, 0]], o.forec || 'v', { fill: .22 })); }
+  const pod = capsule(5.8, 9.4, .42);
+  PODS.forEach(y => ops.push(part(shape(pod, 5.8, 9.4, y, 24), o.pods || c, { w: w * .85, dur: .45 })));
+  const tip = s => [[8.91, s * 16.15], [9.2, s * 16.32], [9.9, s * 16.32], [10.16, s * 16.15]];
+  const LE = lin(-16.15, 16.15, 24).map(y => [wingLE(y), y]), TE = lin(16.15, -16.15, 24).map(y => [wingLE(y) + wingC(y), y]);
+  ops.push(part([...LE, ...tip(1).slice(1, 3), ...TE, ...tip(-1).slice(1, 3).reverse()], o.wing || c, { dur: 1.1 }));
+  if (o.box) ops.push(OUT(tp(lin(o.box[0], o.box[1], 10).map(y => [wingLE(y) + .15 * wingC(y), y]).concat(lin(o.box[1], o.box[0], 10).map(y => [wingLE(y) + .6 * wingC(y), y]))), { c: o.boxc || 'o', tint: .3, single: true, w: 1.6, amp: .3 }));
+  if (!o.simple) {
+    [-1, 1].forEach(s => {   // flap and aileron hinge lines
+      ops.push(OUT(tp(lin(1.6, 15.6, 12).map(y => [wingLE(y) + .74 * wingC(y), s * y])), { c: 'd', open: true, single: true, w: 1.2, amp: .3, op: .8 }));
+      ops.push(L(...tp([[wingLE(11.1) + .74 * wingC(11.1), s * 11.1]])[0], ...tp([[wingLE(11.1) + wingC(11.1), s * 11.1]])[0], { c: 'd', single: true, w: 1.2, op: .8 }));
+      ops.push(L(...tp([[10.5, s * 1.5]])[0], ...tp([[9.75, s * 6.5]])[0], { c: 'd', dash: '5 5', single: true, w: 1.3 }));   // strut, hidden under the wing
+    });
+  }
+  if (o.tail !== 0) { const s = Math.sqrt(o.tail || 1) * 3.5;
+    ops.push(part([[20.45, 0], [21.05, -s], [21.6, -s - .08], [22.15, -s], [22.5, 0], [22.15, s], [21.6, s + .08], [21.05, s]], o.tailc || c, { dur: .5 }));
+    if (!o.simple) ops.push(L(...tp([[21.88, -s * .92]])[0], ...tp([[21.88, s * .92]])[0], { c: 'd', single: true, w: 1.1, op: .8 })); }
+  PODS.forEach(y => ops.push({ dur: .15, build: r => [stroke(`M${X(5.66)} ${Y(y - 1)} Q${X(5.58)} ${Y(y)} ${X(5.66)} ${Y(y + 1)}`, { c: o.pods || c }, w * .7, .9)] }));   // propellers, edge-on
+  if (o.dims) ops.push(DIMY(X(22.6) + dir * 40, Y(-16.15), Y(16.15), 'span 32.3 m'), DIMX(X(0), X(22.6), Y(16.15) + 36, 'length 23.2 m'));
+  return ops;
+}
+
+// front view; o.half draws the fuselage and the right wing only
+function X1FRONT(cx, gy, k, o = {}) {
+  const X = y => cx + y * k, Z = z => gy - z * k, tp = pts => pts.map(([y, z]) => [X(y), Z(z)]);
+  const c = o.c || 'w', w = o.w || 2.4, keep = y => !o.half || y > 0;
+  const part = (pts, cc, extra = {}) => OUT(tp(pts), { w, c: cc, fill: .1, amp: .6, ...extra });
+  const ops = [], s = 3.5;
+  if (o.tail !== false) ops.push(part([[-.13, 3.3], [-.09, 7.15], [.09, 7.15], [.13, 3.3]], c, { dur: .4 }));
+  if (o.tail !== false) ops.push(part(o.half ? [[0, 7.12], [s, 7.12], [s + .1, 7.21], [s, 7.3], [0, 7.3]] : [[-s, 7.12], [s, 7.12], [s + .1, 7.21], [s, 7.3], [-s, 7.3], [-s - .1, 7.21]], c, { dur: .4 }));
+  [-1, 1].filter(keep).forEach(sg => { ops.push(E(X(sg * 1.55), Z(.36), .36 * k, .36 * k, { c, w: w * .8, fill: .14 }), E(X(sg * 1.42), Z(1.05), .5 * k, .45 * k, { c, w, fill: .1 })); });
+  ops.push(E(X(0), Z(2.28), 1.15 * k, 1.18 * k, { c, w, fill: .1 }));
+  [-1, 1].filter(keep).forEach(sg => ops.push(L(X(sg * 1.75), Z(1.18), X(sg * 6.5), Z(3.6), { c: o.strut || c, w: w * .9 })));
+  const top = lin(o.half ? 0 : -16.15, 16.15, 20).map(y => [y, 3.95 + .17 * Math.abs(y) / 16.15]), bot = lin(16.15, o.half ? 0 : -16.15, 20).map(y => [y, 3.6 + .32 * Math.abs(y) / 16.15]);
+  ops.push(part([...top, [16.25, 4.02], ...bot, ...(o.half ? [] : [[-16.25, 4.02]])], o.wing || c, { dur: 1 }));
+  PODS.filter(keep).forEach(y => { const z = Math.abs(y) > 5 ? 3.48 : 3.38; ops.push(E(X(y), Z(z), .42 * k, .42 * k, { c: o.pods || c, w, fill: .14 }), DOT(X(y), Z(z), .1 * k, { c: o.pods || c }));
+    if (o.props !== false) ops.push(E(X(y), Z(z), 1 * k, 1 * k, { c: 'd', w: 1.2, dash: '4 6' })); });
+  if (o.ground) ops.push(L(X(o.half ? -2 : -17), Z(0), X(17), Z(0), { c: 'd', dash: '10 8', single: true, w: 1.3 }));
+  return ops;
+}
+
+// side view, nose left; o.dims adds length and height
+function X1SIDE(x0, gy, k, o = {}) {
+  const X = x => x0 + x * k, Z = z => gy - z * k, tp = pts => pts.map(([x, z]) => [X(x), Z(z)]);
+  const c = o.c || 'w', w = o.w || 2.6;
+  const part = (pts, cc, extra = {}) => OUT(tp(pts), { w, c: cc, fill: .1, amp: o.amp ?? (k < 5 ? .25 : .8), ...extra });
+  const top = x => x < 3.4 ? 2.05 + 1.35 * Math.sqrt(Math.max(0, 1 - (1 - x / 3.4) ** 2)) : x < 15.6 ? 3.4 : 3.4 - .5 * ((x - 15.6) / 5.2) ** 1.5;
+  const bot = x => x < 2.6 ? 2.05 - .9 * Math.sqrt(Math.max(0, 1 - (1 - x / 2.6) ** 2)) : x < 12.6 ? 1.15 : 1.15 + 1.47 * ((x - 12.6) / 8.2) ** 1.7;
+  const ops = [];
+  ops.push(part([[15.8, 3.38], [20.75, 7.18], [22.62, 7.18], [21.05, 2.95]], o.tailc || c, { dur: .6 }));   // fin, 52° sweep
+  ops.push(part(N0012.map(([px, pz]) => [20.5 + px * 2.25, 7.24 + pz * 2.25]), o.tailc || c, { dur: .3 }));
+  ops.push(part([...lin(0, 20.8, 60).map(x => [x, top(x)]), ...lin(20.8, 0, 60).map(x => [x, bot(x)])], c, { dur: 1.2 }));
+  ops.push(part([[2.0, 2.98], [2.72, 3.27], [3.4, 3.33], [3.4, 2.98]], 'b', { w: 1.8, tint: .25, fill: undefined, single: true }));   // windscreen
+  ops.push(L(X(21.35), Z(3.3), X(22.15), Z(7.05), { c: 'd', single: true, w: 1.2 }));                                                   // rudder hinge
+  ops.push(E(X(10.9), Z(1.2), 2.4 * k, .42 * k, { c, w: w * .85, fill: .1 }));                                                           // sponson
+  ops.push(L(X(10.7), Z(1.4), X(9.9), Z(3.6), { c: o.strut || c, w: w * .9 }));
+  ops.push(part(N4415.map(([px, pz]) => [8.6 + px * 2.5, 3.48 + pz * 2.5]), o.wing || c, { dur: .5 }));
+  ops.push(part(shape(capsule(5.8, 9.4, .42), 5.8, 9.4, 0, 24).map(([x, z]) => [x, 3.42 + z]), o.pods || c, { dur: .5 }));
+  ops.push(E(X(5.66), Z(3.42), .09 * k, 1 * k, { c: o.pods || c, w: 1.4, op: .9 }));
+  ops.push(E(X(11.3), Z(.38), .38 * k, .38 * k, { c, w: w * .8, fill: .14 }), L(X(11.3), Z(.76), X(11.15), Z(1.0), { c, single: true, w: w * .8 }),
+    E(X(2.7), Z(.3), .3 * k, .3 * k, { c, w: w * .8, fill: .14 }), L(X(2.7), Z(.6), X(2.85), Z(1.2), { c, single: true, w: w * .8 }));
+  if (o.ground !== false) ops.push(L(X(-1), Z(0), X(24), Z(0), { c: 'd', dash: '10 8', single: true, w: 1.3 }));
+  if (o.dims) ops.push(DIMX(X(0), X(22.7), Z(0) + 34, '23.2 m', { mono: true }), DIMY(X(23.9), Z(0), Z(7.36), '7.3 m', { mono: true }));
+  return ops;
+}
+
+// a NACA 4415 section; (x, y) is the quarter-chord point, aoa in degrees, nose up
+function FOIL(x, y, ch, o = {}) {
+  const a = (o.aoa || 0) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
+  const pts = N4415.map(([px, py]) => { const dx = (px - .25) * ch, dy = -py * ch; return [x + dx * ca - dy * sa, y + dy * ca + dx * sa]; });
+  return OUT(pts, { c: o.c || 'w', w: o.w || 3, fill: o.fill ?? .12, amp: .5, dur: o.dur || .8 });
+}
+
+/* ---------- potential flow past a Joukowski aerofoil (Kutta condition), flow drawn left to right ---------- */
+function joukowski(alphaDeg, o = {}) {
+  const a = alphaDeg * Math.PI / 180, xc = o.xc ?? -.09, yc = o.yc ?? .1, R = Math.hypot(1 - xc, yc), b0 = Math.atan2(yc, 1 - xc);
+  const G = 4 * Math.PI * R * Math.sin(a + b0), ca = Math.cos(a), sa = Math.sin(a);
+  const vel = (x, y) => {                              // conj(dw/dz)
+    const zx = x - xc, zy = y - yc, r2 = zx * zx + zy * zy, q2 = r2 * r2, ix = (zx * zx - zy * zy) / q2, iy = -2 * zx * zy / q2;
+    const wr = ca - R * R * (ca * ix - sa * iy) + G / (2 * Math.PI) * zy / r2, wi = -sa - R * R * (ca * iy + sa * ix) + G / (2 * Math.PI) * zx / r2;
+    return [wr, -wi];
+  };
+  const out = ([x, y]) => { const r2 = x * x + y * y, X = x + x / r2, Y = y - y / r2; return [X * ca + Y * sa, -X * sa + Y * ca]; };  // ζ = z + 1/z, then rotate so the stream runs flat
+  const foil = lin(0, 2 * Math.PI, 120).map(t => out([xc + R * Math.cos(t), yc + R * Math.sin(t)]));
+  const lines = (o.seeds || lin(-1.8, 1.8, 12)).map(d => {
+    let x = -5.5 * ca - d * sa, y = -5.5 * sa + d * ca;
+    const pts = [out([x, y])], h = o.h || .02;
+    for (let i = 0; i < 4000; i++) {
+      const f = (px, py) => { const [u, v] = vel(px, py), m = Math.hypot(u, v) || 1e-9; return [u / m, v / m]; };
+      const k1 = f(x, y), k2 = f(x + h / 2 * k1[0], y + h / 2 * k1[1]), k3 = f(x + h / 2 * k2[0], y + h / 2 * k2[1]), k4 = f(x + h * k3[0], y + h * k3[1]);
+      x += h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]); y += h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+      const p = out([x, y]); if (i % 3 === 0) pts.push(p); if (p[0] > (o.xend ?? 4.6)) break;
+    }
+    return pts;
+  });
+  return { foil, lines };
+}
+// draw it: (cx, cy) is the aerofoil centre on screen, s pixels per unit (the chord is about 4 units)
+function FLOW(cx, cy, s, alphaDeg, o = {}) {
+  const J = joukowski(alphaDeg, o), sc = pts => pts.map(([x, y]) => [cx + x * s, cy - y * s]).filter(([x]) => x > (o.x0 ?? -1e9) && x < (o.x1 ?? 1e9));
+  const ops = J.lines.map(l => OUT(sc(l), { c: o.lc || 'b', open: true, single: true, w: o.lw || 2, amp: .25, op: o.lop ?? .9, dur: .45 }));
+  ops.unshift(OUT(sc(J.foil), { c: o.c || 'w', w: 3, fill: .14, amp: .4, dur: .7 }));
+  return ops;
+}
+
+// a figure from the study; dark-adapted plots sit straight on the board, colour renders get a frame
+const IMGS = [];
+const IMG = (x, y, w, h, src, o = {}) => { IMGS.push(src); return [{ dur: .9, build: () => {
+  const im = mk('image', { href: src, x, y, width: w, height: h, preserveAspectRatio: 'xMidYMid meet' });
+  im.dataset.fade = 1; im.dataset.layer = 'media'; if (o.round) im.style.clipPath = `inset(0 round ${o.round}px)`;
+  if (o.op != null) im.style.setProperty('--op', o.op);
+  return [im];
+} }, o.frame ? RR(x - 6, y - 6, w + 12, h + 12, { c: o.fc || 'd', q: (o.round || 0) + 6, w: 2, single: true }) : [],
+  o.cap ? T(x, y + h + (o.frame ? 30 : 24), o.cap, { c: 'd', s: 15, mono: true }) : []]; };
+
+// NACA 4415 thickness and camber at chord station x (0..1)
+const n4415 = x => { const m = .04, p = .4, t = .15, yt = 5 * t * (.2969 * Math.sqrt(x) - .126 * x - .3516 * x * x + .2843 * x ** 3 - .1036 * x ** 4), yc = x < p ? m / p / p * (2 * p * x - x * x) : m / (1 - p) ** 2 * (1 - 2 * p + 2 * p * x - x * x); return { yu: yc + yt, yl: yc - yt, yc }; };
+// the wing section with its box between the spars filled with potted cells, two tiers deep
+function WINGBOX(x, y, ch) {
+  const X = u => x + u * ch, Y = v => y - v * ch, f0 = .15, f1 = .6;
+  const box = [...lin(f0, f1, 16).map(u => [X(u), Y(n4415(u).yu)]), ...lin(f1, f0, 16).map(u => [X(u), Y(n4415(u).yl)])];
+  const rad = 16, gap = 2 * rad + 4, cells = [];
+  for (let cx = X(f0) + rad + 8; cx + rad < X(f1) - 8; cx += gap) { const yc = Y(n4415((cx - x) / ch).yc); cells.push([cx, yc - rad - 2], [cx, yc + rad + 2]); }
+  return [OUT(N4415.map(([u, v]) => [X(u), Y(v)]), { c: 'w', w: 3, fill: .08, amp: .6, dur: 1 }), OUT(box, { c: 'o', tint: .12, single: true, w: 1.4, amp: .3 }),
+    [f0, f1].map(u => L(X(u), Y(n4415(u).yu), X(u), Y(n4415(u).yl), { c: 'w', w: 2.4 })),
+    { dur: 1.2, build: r => [stroke(cells.map(([cx, cy]) => ellD(r, cx, cy, rad, rad)).join(' '), { c: 'g' }, 2)] }];
+}
+// the right half-wing seen from above, span running to the right and the leading edge on top
+function HALFWING(x0, yLE, k, o = {}) {
+  const X = s => x0 + (s - 1.15) * k, dle = s => .31 * s / 16.15, ch = s => 2.5 - 1.25 * s / 16.15, Yc = (s, f) => yLE + (dle(s) + f * ch(s)) * k;
+  const ops = [L(x0 - 4, yLE - 3.4 * k, x0 - 4, yLE + 3.6 * k, { c: 'd', single: true, w: 2 })];
+  [3.8, 7.8].forEach(s => { const y1 = yLE + (dle(s) - 2.8) * k, y2 = yLE + (dle(s) + .8) * k, xc = X(s);
+    ops.push(OUT(shape(capsule(y1, y2, .42 * k, .6 * k, .12 * k, .8 * k), y1, y2, xc, 24).map(([a, b]) => [b, a]), { c: o.pods || 'o', fill: .12, w: 2.2, amp: .4 }),
+      L(xc - 1 * k, y1 - 4, xc + 1 * k, y1 - 4, { c: o.pods || 'o', single: true, w: 1.6 })); });
+  const LE = lin(1.15, 16.15, 18).map(s => [X(s), Yc(s, 0)]), TE = lin(16.15, 1.15, 18).map(s => [X(s), Yc(s, 1)]);
+  ops.push(OUT([...LE, [X(16.3), Yc(16.15, .5)], ...TE], { c: 'w', fill: .1, w: 2.6, dur: 1 }));
+  if (o.cells) { const [s0, s1] = o.cells; ops.push(OUT([...lin(s0, s1, 8).map(s => [X(s), Yc(s, .15)]), ...lin(s1, s0, 8).map(s => [X(s), Yc(s, .6)])], { c: 'g', tint: .3, single: true, w: 1.6, amp: .3 }), HATCH(X(s0), Yc(s0, .15), X(s1) - X(s0), Yc(s1, .6) - Yc(s0, .15), { c: 'g', op: .4, gap: 12 })); }
+  if (o.sep) [[3, 4], [8, 8.7]].forEach(([a, b]) => ops.push(HATCH(X(a), Yc(a, .45), X(b) - X(a), Yc(a, 1) - Yc(a, .45), { c: 'p', op: .9, gap: 9, w: 2 })));
+  return ops;
+}
+// the CFD run matrix
+function RUNS(x, y) {
+  const al = [0, 4, 8, 12, 16], rows = ['A', 'B-opt', 'C10'], cx = j => x + 130 + j * 66, cy = i => y + 52 + i * 46;
+  const med = { 'A': [0, 8], 'B-opt': [0] };
+  return [T(x, y - 34, 'the runs · controls at 0°, so untrimmed', { c: 'd', s: 19 }), T(x, y + 6, 'α', { c: 'd', s: 18, mono: true }), al.map((a, j) => T(cx(j), y + 6, a + '°', { c: 'd', s: 15, a: 'm', mono: true })),
+    rows.map((n, i) => [T(x, cy(i), n, { s: 17, mono: true }), al.map((a, j) => n === 'C10' && a === 16 ? XM(cx(j), cy(i) - 6, { k: 7 }) : [DOT(cx(j), cy(i) - 6, 5), (med[n] || []).includes(a) ? E(cx(j), cy(i) - 6, 12, 12, { c: 'b', w: 2 }) : []])]),
+    DOT(x + 6, y + 200, 5), T(x + 20, y + 205, 'coarse', { c: 'd', s: 14, mono: true }), E(x + 112, y + 200, 10, 10, { c: 'b', w: 2 }), T(x + 128, y + 205, 'medium', { c: 'd', s: 14, mono: true }),
+    XM(x + 222, y + 200, { k: 6 }), T(x + 236, y + 205, 'diverged', { c: 'd', s: 14, mono: true })];
+}
+
+/* ---------- the video ---------- */
+const CHAPTERS = ['the question', 'the model', 'mission energy', 'battery chemistry', 'the wing battery', 'a small front wing', 'CFD setup', 'CFD results', 'what we got wrong', 'conclusions'];
+const SUBS = ['', 'a paper airplane from public data', 'does 360 kWh get you anywhere?', 'would a better cell help?', 'what if the battery is the wing?', 'canards and foreplanes, in AVL', 'simulating the real airflow', 'what the real flow says', 'limitations and corrections', 'what a laptop told us'];
+let CH = 1;
+const S = (name, beats, opt = {}) => ({ name, ch: CH, ...opt, beats: beats.map(([say, ops, dur]) => ({ say, dur, ops: ops.flat(Infinity) })) });
+// a chapter title card: outlined number, title, and the flight so far
+const CARD = n => { CH = n; const x0 = 470, step = 700 / 9, cap = CHAPTERS[n - 1][0].toUpperCase() + CHAPTERS[n - 1].slice(1);
+  return S(`${n}. ${cap}`, [[`Part ${n}: ${cap}.`, [
+    T(300, 440, String(n).padStart(2, '0'), { c: 'y', s: 230, b: 1, a: 'm', outline: true, sw: 2.6 }),
+    T(x0, 362, CHAPTERS[n - 1], { s: 66, b: 1 }), T(x0, 418, SUBS[n - 1], { c: 'd', s: 30 }),
+    L(x0, 520, x0 + 700, 520, { c: 'd', dash: '2 10', single: true, w: 2.2 }),
+    Array.from({ length: 10 }, (_, i) => i === n - 1 ? [] : DOT(x0 + i * step, 520, i < n - 1 ? 5 : 4, { c: i < n - 1 ? 'w' : 'f' })),
+    X1TOP(x0 + (n - 1) * step, 520, 1.55, { flip: true, simple: true, c: 'y', w: 1.6 }),
+    T(x0, 568, `${n} of 10`, { c: 'd', s: 15, mono: true })]]], { card: true }); };
+const row = (x0, x1, y, label, value, o = {}) => [T(x0, y, label, { c: 'd', s: o.ls || 22, mono: o.mono }), T(x1, y, value, { s: o.s || 28, b: o.b ?? 1, a: 'e', c: o.c || 'w' }), o.line === false ? [] : L(x0, y + 18, x1, y + 18, { c: 'f', single: true, w: 1.2 })];
+const chips = (x, y, list, o = {}) => { let xx = x; return list.map(s => { const c = CHIP(xx, y, s, o); xx += TW(s, o.s || 18) + 28 + (o.gap || 12); return c; }); };
+
+const SCENES = [
+ S('Intro', [
+  ["Redesigning an electric airliner, on a laptop. This is an independent study of the Heart Aerospace X1. We build a model of it from public data, see how far it can really fly, and then try to make it better.",
+   [T(640, 102, 'redesigning an electric airliner', { c: 'y', s: 56, a: 'm', b: 1 }), T(640, 164, 'on a laptop', { s: 56, a: 'm', b: 1 }), P('M498 184 Q 640 174 792 186', { c: 'y', w: 2.6, dur: .4 }),
+    X1SIDE(233, 500, 36, { pods: 'o', dims: true }),
+    T(640, 612, 'an independent study of the Heart Aerospace X1', { s: 28, a: 'm' }), T(640, 646, 'all numbers are estimates · OpenVSP · AVL · OpenFOAM', { c: 'd', s: 15, a: 'm', mono: true })]]
+ ]),
+ S('The X1', [
+  ["Here's what Heart has published. An all-electric demonstrator, with a strut-braced high wing, a T-tail, and four motor pods on the wing.",
+   [H('the X1, as published'), X1TOP(330, 395, 9.2, { pods: 'o' }),
+    T(84, 170, '4 electric motor pods', { c: 'o', s: 22 }), LEAD(150, 180, 279, 322, { c: 'o' }),
+    T(456, 356, 'T-tail', { s: 22 }), LEAD(452, 350, 430, 372),
+    T(330, 606, 'strut-braced high wing', { s: 22, a: 'm' }), LEAD(330, 584, 318, 520)]],
+  ["The span is 32.3 meters, the length 23.2 meters, and the max takeoff weight about 11,340 kilograms.",
+   [T(640, 138, 'PUBLISHED FIGURES', { c: 'd', s: 13, mono: true, ls: 2 }), RR(640, 150, 560, 200, { c: 'd', fill: .04, q: 14, w: 1.8, single: true }),
+    row(670, 1172, 205, 'span', '32.3 m'), row(670, 1172, 260, 'length', '23.2 m'), row(670, 1172, 315, 'max takeoff weight', '≈ 11,340 kg', { line: false })]],
+  ["It has four 400 kilowatt electric motors, and four 90 kilowatt-hour battery packs. That's 360 kilowatt-hours in total.",
+   [T(640, 393, 'POWERTRAIN', { c: 'o', s: 13, mono: true, ls: 2 }), RR(640, 405, 560, 220, { c: 'o', fill: .04, q: 14, w: 1.8, single: true }),
+    row(670, 1172, 458, 'electric motors', '4 × 400 kW', { c: 'o' }), row(670, 1172, 512, 'battery packs', '4 × 90 kWh', { c: 'o' }),
+    T(670, 590, 'total energy', { c: 'd', s: 22 }), T(1172, 596, '360 kWh', { c: 'o', s: 50, b: 1, a: 'e' })]]
+ ]),
+ S('Four questions', [
+  ["We asked four questions. How far can it really fly on 360 kilowatt-hours? Would better batteries, or a battery built into the wing, help? Would a small front wing improve efficiency? And does a real CFD simulation agree with the quick tools?",
+   [H('four questions'), [['how far can it really', 'fly on 360 kWh?'], ['would better cells, or a', 'wing battery, help?'], ['would a small front wing', 'improve efficiency?'], ['does real CFD agree', 'with the quick tools?']].map(([l1, l2], i) => {
+     const x = 80 + (i % 2) * 580, y = 140 + Math.floor(i / 2) * 140;
+     const icon = [BATT(x + 425, y + 42, 74, 36, .35, { c: 'o' }), [FOIL(x + 455, y + 62, 100, { c: 'w', w: 2.2 }), [0, 1, 2].map(j => E(x + 438 + j * 17, y + 60, 5.5, 5.5, { c: 'g', w: 1.6 }))],
+       X1TOP(x + 470, y + 60, 1.7, { simple: true, fore: 6, fx: 3, forec: 'v' }), [FOIL(x + 462, y + 64, 70, { aoa: 6, w: 2 }), STREAMS(x + 470, y + 64, 110)]][i];
+     return [RR(x, y, 540, 118, { c: 'd', fill: .04, q: 14, w: 1.8, single: true }), T(x + 26, y + 78, String(i + 1), { c: 'y', s: 54, b: 1 }), T(x + 78, y + 52, l1, { s: 27 }), T(x + 78, y + 90, l2, { s: 27 }), icon];
+   })]],
+  ["That front-wing idea came from a remark attributed to Elon Musk: put a small wing up front, in place of the tail. We tested that idea literally.",
+   [T(92, 476, '“', { c: 'v', s: 72, b: 1 }), T(130, 462, 'a small wing up front, in place of the tail', { c: 'v', s: 30 }), T(130, 494, '— remark attributed to Elon Musk · we tested it literally', { c: 'd', s: 19 }),
+    A(712, 454, 586, 404, { c: 'v', bend: 18, w: 2.2 })]],
+  ["One important note before we start. Heart hasn't published CAD for the X1. Every number here is an estimate from an independent hobby study, built from public figures, photo measurements and engineering assumptions. It is not Heart data. And the alternative layouts are hypothetical. None of them exists on the real aircraft.",
+   [RR(80, 532, 1120, 96, { c: 'p', tint: .07, q: 16, w: 2.2 }), T(640, 574, 'every number here is an independent estimate, not Heart data', { c: 'p', s: 29, a: 'm', b: 1 }),
+    T(640, 608, 'layouts B, B-opt and C are hypothetical · none exists on the real aircraft', { c: 'd', s: 19, a: 'm' })]]
+ ]),
+ S('The toolkit', [
+  ["All of it runs on one laptop, with free tools.",
+   [H('the toolkit'), T(80, 150, 'free tools · one laptop', { c: 'd', s: 26 }), LAPTOP(1080, 104, 110, { c: 'd' })]],
+  ["OpenVSP for the geometry. AVL for quick aerodynamics and stability. Python and Octave for range, mission and battery models. And OpenFOAM for CFD, a full simulation of the airflow.",
+   [[['OpenVSP', 'geometry', 'v'], ['AVL', 'quick aero + stability', 'y'], ['Python · Octave', 'range · mission · batteries', 'o'], ['OpenFOAM', 'CFD: the full airflow', 'b']].map(([n, d, c], i) => {
+     const x = 80 + i * 285, y = 220, cx = x + 127;
+     const icon = [X1TOP(cx, y + 95, 3.1, { simple: true, c: 'v' }), [GRID(cx - 80, y + 70, 160, 48, 16, { c: 'y', op: .8 }), A(cx - 96, y + 132, cx - 40, y + 132, { c: 'y', w: 1.8, h: 9 })],
+       [L(cx - 70, y + 140, cx + 72, y + 140, { c: 'o', single: true, w: 1.8 }), L(cx - 70, y + 140, cx - 70, y + 52, { c: 'o', single: true, w: 1.8 }), P(`M${cx - 66} ${y + 132} C ${cx - 30} ${y + 120}, ${cx} ${y + 80}, ${cx + 66} ${y + 62}`, { c: 'o', w: 2.4 }), [0, 1, 2].map(j => DOT(cx - 40 + j * 45, y + [122, 95, 72][j], 4, { c: 'o' }))],
+       [FOIL(cx - 6, y + 96, 92, { aoa: 6, w: 2.2 }), STREAMS(cx, y + 96, 160)]][i];
+     return [RR(x, y, 255, 300, { c, fill: .05, q: 16, w: 2 }), icon, T(cx, y + 210, n, { c, s: 30, b: 1, a: 'm' }), T(cx, y + 248, d, { c: 'd', s: 20, a: 'm' })];
+   })]]
+ ]),
+ CARD(2),
+ S('A paper airplane', [
+  ["Step one: build a paper airplane from public data. Every value lives in one parameter file, and every value is tagged: published, photo estimate, or assumption, each with its own uncertainty.",
+   [H('step 1: a paper airplane'), RR(80, 140, 420, 262, { c: 'd', fill: .05, q: 12, w: 1.8, single: true }), T(104, 178, 'params.yaml', { s: 19, mono: true }), L(100, 196, 480, 196, { c: 'f', single: true, w: 1.2 }),
+    [['span: 32.3', 'published', 'g'], ['root_chord: 2.5', 'photo est.', 'y'], ['cg: 0.25 mac', 'assumption', 'p']].map(([k, tag, c], i) => [T(104, 240 + i * 48, k, { s: 17, mono: true }), CHIP(480, 234 + i * 48, tag, { c, s: 15, a: 'e' })]),
+    T(104, 384, '+ an uncertainty on every value', { c: 'd', s: 18 })]],
+  ["A Python generator reads that one file and builds everything else: the OpenVSP geometry, the AVL input decks, a watertight STL surface for CFD, and a drag build-up.",
+   [A(505, 271, 546, 271, { c: 'd', w: 2.2 }), RR(550, 239, 205, 64, { c: 'b', fill: .08, q: 12, w: 2 }), T(652, 278, 'generator.py', { c: 'b', s: 17, a: 'm', mono: true }),
+    ['OpenVSP geometry', 'AVL input decks', 'watertight STL for CFD', 'drag build-up (CD0)'].map((n, i) => [A(760, 271, 836, 165 + i * 70, { c: 'd', w: 1.8, h: 10 }), RR(842, 141 + i * 70, 358, 48, { c: 'g', fill: .06, q: 10, w: 1.6, single: true }), T(862, 172 + i * 70, n, { s: 22 })])]],
+  ["The missing dimensions were scaled off the published span, length and height. That gives a wing of about 60.6 square meters, with an aspect ratio of 17.2: long and skinny. The area alone is uncertain by about 15 percent.",
+   [DIMX(90, 590, 452, 'span 32.3 m', { above: true }), OUT([[90, 480], [340, 475], [590, 480], [590, 494], [340, 514], [90, 494]], { c: 'y', fill: .12, w: 2.4 }),
+    STAT(90, 600, '60.6', 'm²', 'wing area', { c: 'y', s: 44 }), STAT(272, 600, '17.2', '', 'aspect ratio', { c: 'y', s: 44 }), STAT(450, 600, '±15%', '', 'area uncertainty', { c: 'p', s: 44 })]],
+  ["A quick sanity check: the model comes out 22.9 meters long, against 23.2 published. And 7.37 meters tall, against 7.3. Close enough.",
+   [RR(680, 445, 520, 182, { c: 'g', fill: .05, q: 12, w: 1.8, single: true }), T(704, 484, 'closure check vs published', { s: 24, b: 1 }),
+    T(704, 534, 'length', { c: 'd', s: 22 }), T(1110, 534, '22.9 vs 23.2 m', { s: 24, a: 'e' }), CK(1152, 526),
+    T(704, 584, 'height', { c: 'd', s: 22 }), T(1110, 584, '7.37 vs 7.3 m', { s: 24, a: 'e' }), CK(1152, 576)]]
+ ]),
+ S('Our X1', [
+  ["Here's the result: our own estimated geometry, in three views. Not Heart's drawings, just our best reading of the public numbers.",
+   [H('our estimated X1'), IMG(250, 128, 780, 501, 'assets/views_A_dark.png', { cap: 'study output · OpenVSP parametric model, variant A_v2' }), CHIP(1046, 150, 'ESTIMATED', { c: 'p', s: 14, mono: true, b: 1 })]]
+ ]),
+ S('Baseline aero', [
+  ["We also had to assume what Heart hasn't published: cruise at 80 meters per second at 3,000 meters, and the balance point, the center of gravity, at 25 percent of the wing's mean chord.",
+   [H('assumptions'), row(80, 560, 170, 'cruise', '80 m/s @ 3,000 m', { s: 26 }), row(80, 560, 222, 'center of gravity', '25% of mean chord', { s: 26 }), row(80, 560, 274, 'wing sections', 'NACA 4415 / 4412', { s: 26, line: false })]],
+  ["Now the key number: L over D, lift divided by drag. It tells you how much weight the wing carries for each unit of drag. Higher means less energy per kilometer.",
+   [FLOW(940, 300, 60, 6, { seeds: lin(-1.6, 1.6, 9), x0: 690, x1: 1215, lop: .55 }), A(948, 284, 948, 168, { c: 'g', w: 3.2 }), T(964, 182, 'lift', { c: 'g', s: 28, b: 1 }),
+    A(1072, 308, 1168, 308, { c: 'p', w: 3.2 }), T(1120, 342, 'drag', { c: 'p', s: 28, b: 1, a: 'm' }),
+    T(940, 466, 'L/D = lift ÷ drag', { c: 'y', s: 40, a: 'm', b: 1 }), T(940, 504, 'higher = less energy per km', { c: 'd', s: 22, a: 'm' })]],
+  ["AVL gives the baseline an L over D of about 21.3, and a simple cruise-only range of about 140 kilometers. Each unit of L over D is worth about 6.6 kilometers of range.",
+   [STAT(80, 402, '21.3', '', 'baseline L/D in AVL (layout A)', { c: 'y', s: 72 }), STAT(80, 520, '≈140', 'km', 'simple cruise-only range', { s: 48 }), T(80, 600, '+ 6.6 km for every unit of L/D', { c: 'g', s: 24 })]],
+  ["But 21 is optimistic. The drag estimate leaves out the landing gear, cooling, and lots of small bumps and gaps. Hold that thought. It comes back later.",
+   [E(146, 378, 90, 46, { c: 'p', w: 2.6 }), T(256, 372, 'optimistic!', { c: 'p', s: 34, b: 1 }), T(256, 402, 'no gear, cooling or small-bits drag', { c: 'd', s: 19 })]]
+ ]),
+ CARD(3),
+ S('Mission energy', [
+  ["Step two: does 360 kilowatt-hours actually get you anywhere? We modeled a full mission, at max weight.",
+   [H('step 2: mission energy'), GROUND(100, 1180, 520), L(100, 280, 470, 280, { c: 'd', dash: '3 6', single: true, w: 1.2 }), T(104, 270, '3,000 m', { c: 'd', s: 14, mono: true }),
+    P('M120 520 L250 520 L470 280 L880 280 L1120 520', { c: 'b', w: 3.6, dur: 1.3 }), X1SIDE(500, 291, 3.2, { ground: false, w: 1.4, pods: 'o' })]],
+  ["Ten minutes of taxi. A takeoff at 1.6 megawatts. A climb at 1.2 megawatts. Cruise at 80 meters per second. And a gliding descent.",
+   [T(185, 552, 'taxi · 10 min', { s: 22, a: 'm' }), T(272, 552, 'takeoff 1.6 MW', { c: 'o', s: 22 }), T(350, 395, 'climb 1.2 MW', { c: 'o', s: 24, a: 'e' }),
+    T(675, 312, 'cruise 80 m/s', { s: 26, a: 'm' }), T(1015, 395, 'glide down', { s: 24 })]],
+  ["The pack: 250 watt-hour-per-kilogram cells, about 175 at pack level once you add the structure. So 360 kilowatt-hours weighs about 2,060 kilograms. Roughly 18 percent of the airplane.",
+   [T(720, 148, 'battery share of max weight', { c: 'd', s: 19 }), R(720, 160, 460, 28, { c: 'd', single: true, w: 1.6 }), R(720, 160, 83, 28, { c: 'o', tint: .5, single: true, w: 1.6 }), T(812, 182, '≈ 18%', { c: 'o', s: 22, b: 1 }),
+    T(720, 222, '250 Wh/kg cells → 175 Wh/kg as a pack', { s: 20 }), T(720, 252, '360 kWh ≈ 2,060 kg', { c: 'o', s: 22, b: 1 })]],
+  ["Because 21 is optimistic, we also tested L over D values of 18 and 16, which are more realistic.",
+   [T(100, 618, 'L/D tested:', { c: 'd', s: 22 }), chips(222, 611, ['21 · optimistic'], { c: 'y', s: 17 }), chips(390, 611, ['18', '16 · realistic'], { c: 'w', s: 17 })]]
+ ]),
+ S('Range on 360 kWh', [
+  ["The results. At 3,000 meters, with the optimistic L over D and no reserve: about 106 kilometers. The climb alone uses about 260 of the 360 kilowatt-hours.",
+   [H('range on 360 kWh'), T(80, 146, '3,000 m · L/D 21 · no reserve', { c: 'd', s: 15, mono: true }), BATT(80, 160, 620, 86, 0, { c: 'o' }),
+    R(88, 168, 436, 70, { c: 'o', tint: .35, single: true, w: 1.2 }), HATCH(88, 168, 436, 70, { c: 'o', op: .45 }), T(306, 212, 'climb ≈ 260 kWh', { s: 25, a: 'm', b: 1 }), T(612, 212, 'cruise', { c: 'd', s: 20, a: 'm' }),
+    STAT(760, 228, '≈106', 'km', 'range, best case', { s: 62 })]],
+  ["At the more realistic L over D of 18 or 16, at that altitude, the mission can't even be completed.",
+   [T(80, 330, '3,000 m · L/D 18 or 16', { s: 26 }), CHIP(366, 322, "can't finish", { c: 'p', s: 18, b: 1 }), XM(522, 321)]],
+  ["Fly lower, at 1,500 meters, and you get about 122, 105, or 93 kilometers.",
+   [T(80, 396, '1,500 m · no reserve', { c: 'd', s: 15, mono: true }), [[21, 122], [18, 105], [16, 93]].map(([ld, km], i) => { const y = 410 + i * 48;
+     return [T(150, y + 22, 'L/D ' + ld, { c: 'd', s: 15, a: 'e', mono: true }), R(165, y, km * 3.6, 30, { c: 'g', tint: .25, w: 1.8, single: true }), T(177 + km * 3.6, y + 23, km + ' km', { s: 22, b: 1 })]; })]],
+  ["Now the killer. Real flights carry reserve energy, like thirty minutes of loiter. The reserve alone needs 240 to 350 kilowatt-hours. With any reserve, the mission isn't feasible, at any altitude, at any L over D.",
+   [RR(760, 318, 440, 274, { c: 'p', tint: .07, q: 16, w: 2.2 }), T(980, 368, '+ 30 min reserve', { c: 'p', s: 30, a: 'm', b: 1 }), T(980, 408, 'the reserve alone: 240–350 kWh', { s: 22, a: 'm' }),
+    T(980, 496, 'not feasible', { c: 'p', s: 50, a: 'm', b: 1 }), T(980, 540, 'at any altitude, at any L/D', { c: 'd', s: 20, a: 'm' })]]
+ ]),
+ S('How much would it take?', [
+  ["Flip it around: how much battery would you actually need? Here's what's installed: 360 kilowatt-hours. Just 100 kilometers, with no reserve, takes about 350 to 430, depending on L over D.",
+   [H('how much battery would it take?'), [0, 250, 500, 750, 1000].map(v => [v ? L(150, 560 - v * .36, 1070, 560 - v * .36, { c: 'f', dash: '2 7', single: true, w: 1 }) : [], T(140, 565 - v * .36, String(v), { c: 'd', s: 13, a: 'e', mono: true })]),
+    T(150, 178, 'kWh needed', { c: 'd', s: 15, mono: true }), L(150, 560, 1070, 560, { single: true, w: 1.8 }),
+    L(150, 430, 1070, 430, { c: 'g', dash: '10 6', single: true, w: 2 }), T(1070, 420, 'installed: 360 kWh', { c: 'g', s: 20, a: 'e', b: 1 }),
+    R(230, 434, 150, 126, { c: 'b', tint: .22, w: 2, single: true }), R(230, 406, 150, 28, { c: 'b', dash: '5 5', single: true, w: 1.6 }), HATCH(230, 406, 150, 28, { c: 'b', op: .5 }),
+    T(305, 394, '349–428', { c: 'b', s: 22, a: 'm', b: 1 }), T(305, 590, '100 km', { s: 22, a: 'm' }), T(305, 612, 'no reserve', { c: 'd', s: 16, a: 'm' })]],
+  ["Two hundred kilometers, with no reserve: about 580 to 720.",
+   [R(480, 352, 150, 208, { c: 'y', tint: .22, w: 2, single: true }), R(480, 300, 150, 52, { c: 'y', dash: '5 5', single: true, w: 1.6 }), HATCH(480, 300, 150, 52, { c: 'y', op: .5 }),
+    T(555, 288, '578–723', { c: 'y', s: 22, a: 'm', b: 1 }), T(555, 590, '200 km', { s: 22, a: 'm' }), T(555, 612, 'no reserve', { c: 'd', s: 16, a: 'm' })]],
+  ["And 200 kilometers with a 30-minute reserve: about 845 to 1,070. Two to three times what's installed.",
+   [R(730, 256, 150, 304, { c: 'p', tint: .22, w: 2, single: true }), R(730, 174, 150, 82, { c: 'p', dash: '5 5', single: true, w: 1.6 }), HATCH(730, 174, 150, 82, { c: 'p', op: .5 }),
+    T(805, 162, '845–1,072', { c: 'p', s: 22, a: 'm', b: 1 }), T(805, 590, '200 km', { s: 22, a: 'm' }), T(805, 612, '+ 30 min reserve', { c: 'd', s: 16, a: 'm' }),
+    T(905, 256, '2–3×', { c: 'p', s: 58, b: 1 }), T(907, 288, "what's installed", { c: 'd', s: 20 })]]
+ ]),
+ S('The weight spiral', [
+  ["And you can't just bolt on more battery. More battery means more weight, which needs more energy, which needs more battery. That's the weight spiral.",
+   [H('the weight spiral'), [[640, 175, 'more battery', 'o'], [842, 432, 'more weight', 'p'], [438, 432, 'more energy', 'y']].map(([x, y, s, c]) => { const w = TW(s, 32, { b: 1 }) + 40;
+     return [RR(x - w / 2, y - 34, w, 48, { c, tint: .08, q: 24, w: 2 }), T(x, y, s, { c, s: 32, a: 'm', b: 1 })]; }),
+    A(752, 182, 858, 392, { c: 'd', bend: -45, w: 2.4 }), A(760, 458, 520, 458, { c: 'd', bend: -40, w: 2.4 }), A(420, 394, 528, 184, { c: 'd', bend: -45, w: 2.4 })]],
+  ["At fixed max weight, 200 kilometers plus a reserve, at L over D 18, needs about 3,460 kilograms more battery. That wipes out the payload.",
+   [T(640, 270, '200 km + reserve · L/D 18', { c: 'd', s: 17, a: 'm' }), T(640, 318, '+3,460 kg', { c: 'p', s: 48, a: 'm', b: 1 }), T(640, 356, '= no payload left', { s: 26, a: 'm', b: 1 })]],
+  ["Let the airplane grow instead, and 200 kilometers with no reserve converges at about 842 kilowatt-hours, and 14.8 tonnes. With a 30-minute reserve, the design never converges.",
+   [T(640, 560, 'let it grow: 200 km, no reserve → ≈ 842 kWh and 14.8 t', { s: 24, a: 'm' }), T(640, 602, 'with a 30 min reserve, it never converges', { c: 'p', s: 28, a: 'm', b: 1 })]]
+ ]),
+ S('Power, too', [
+  ["There's a power problem too. C rate is power relative to capacity. 1 C would empty the pack in one hour.",
+   [H('power, too'), T(80, 165, 'C-rate = power ÷ capacity', { c: 'y', s: 34, b: 1 }), T(80, 205, '1C empties the pack in one hour', { c: 'd', s: 22 }),
+    L(140, 420, 1140, 420, { single: true, w: 2 }), [0, 1, 2, 3, 4, 5].map(i => [L(140 + i * 200, 412, 140 + i * 200, 428, { single: true, w: 1.6 }), T(140 + i * 200, 454, i + 'C', { c: 'd', s: 16, a: 'm', mono: true })])]],
+  ["Takeoff at 1.6 megawatts, from 360 kilowatt-hours, is a 4.4 C peak: about 2,220 amps at 720 volts. Today's high-energy cells are rated for only 1 to 2 C.",
+   [R(340, 362, 200, 58, { c: 'g', tint: .16, w: 1.6, single: true }), HATCH(340, 362, 200, 58, { c: 'g', op: .35 }), T(440, 348, 'high-energy cells: 1–2C', { c: 'g', s: 22, a: 'm', b: 1 }),
+    L(1020, 306, 1020, 420, { c: 'p', w: 2.6 }), P('M1009 290 L1031 290 L1020 307 Z', { c: 'p', tint: 1, w: 2 }), T(1020, 248, 'takeoff peak 4.4C', { c: 'p', s: 28, a: 'm', b: 1 }), T(1020, 276, '1.6 MW · ≈ 2,220 A at 720 V', { c: 'd', s: 17, a: 'm' })]],
+  ["So the X1 makes sense as a demonstrator. And the big lesson: battery energy density, not aerodynamics, is what limits it.",
+   [HL(244, 570, 792), T(640, 570, 'the battery, not the aerodynamics, is the limit', { c: 'y', s: 36, a: 'm', b: 1 }), T(640, 606, 'the X1 makes sense as a demonstrator', { c: 'd', s: 20, a: 'm' })]]
+ ]),
+ CARD(4),
+ S('Better chemistry?', [
+  ["Step three. If the battery is the limit, what about a better battery? We compared six chemistries at the same pack mass, about 2,057 kilograms, flying at 1,500 meters with an L over D of 18.",
+   [H('step 3: better chemistry?'), T(80, 138, 'same pack mass ≈ 2,057 kg · 1,500 m · L/D 18 · no reserve', { c: 'd', s: 15, mono: true }),
+    [50, 100, 150, 200].map(km => [L(300 + km * 3, 158, 300 + km * 3, 532, { c: 'f', dash: '2 7', single: true, w: 1 }), T(300 + km * 3, 556, String(km), { c: 'd', s: 13, a: 'm', mono: true })]), T(960, 556, 'km', { c: 'd', s: 13, mono: true }), L(300, 158, 300, 532, { c: 'd', single: true, w: 1.4 })]],
+  ["LFP, the safe and cheap chemistry in many cars, is too heavy: about 62 kilometers. NMC and NCA, today's high-energy workhorses, reach about 110 and 115.",
+   [[['LFP', 62, 'd'], ['NMC', 110, 'w'], ['NCA', 115, 'w']].map(([n, km, c], i) => { const y = 165 + i * 58; return [T(285, y + 25, n, { s: 24, a: 'e' }), R(300, y, km * 3, 34, { c, tint: .2, w: 1.8, single: true }), T(312 + km * 3, y + 25, km + ' km', { c, s: 22, b: 1 })]; })]],
+  ["Lithium-sulfur and solid-state land around 145. And silicon-anode cells reach about 211 kilometers. They're the only chemistry here that can also carry a 30-minute reserve, at about 96 kilometers.",
+   [[['Li-S', 147, 'b'], ['solid-state', 143, 'b'], ['silicon-anode', 211, 'g']].map(([n, km, c], i) => { const y = 339 + i * 58; return [T(285, y + 25, n, { s: 24, a: 'e' }), R(300, y, km * 3, 34, { c, tint: .2, w: 1.8, single: true }), T(312 + km * 3, y + 25, km + ' km', { c, s: 22, b: 1 })]; }),
+    HATCH(300, 455, 633, 34, { c: 'g', op: .4 }), L(588, 449, 588, 495, { c: 'y', w: 2.6, single: true }), T(598, 520, 'with a 30 min reserve: ≈ 96 km, the only one', { c: 'y', s: 18 })]],
+  ["The catch: today's 450 watt-hour-per-kilogram silicon cells are rated at just 1 C, and last 150 to 300 cycles. The X1 needs a 4.4 C peak, and more than a thousand cycles.",
+   [RR(80, 578, 1120, 66, { c: 'p', tint: .07, q: 14, w: 2 }), T(104, 619, 'the catch', { c: 'p', s: 26, b: 1 }), T(236, 619, "today's 450 Wh/kg Si cells: 1C, 150–300 cycles", { s: 21 }), T(1176, 619, 'X1 needs: 4.4C, 1,000+ cycles', { c: 'y', s: 21, a: 'e', b: 1 })]]
+ ]),
+ S('Our battery pick', [
+  ["So our recommendation is two-track. For the demonstrator: proven, high-power NMC or NCA 21700 cells, in four independent 90 kilowatt-hour packs. They handle 4 to 5 C, and they have certification data.",
+   [H('our battery pick'), RR(80, 140, 540, 350, { c: 'b', fill: .05, q: 16, w: 2.2 }), CYL(110, 176, 40, 66, { c: 'b', fill: .12, w: 2.2 }), T(172, 208, 'demonstrator', { c: 'b', s: 38, b: 1 }), T(172, 240, 'proven today', { c: 'd', s: 20 }),
+    BUL(110, 305, ['high-power NMC / NCA', '21700 cells, 4 × 90 kWh packs', 'handles 4–5C', 'has certification data'], { s: 24, gap: 44, mc: 'b' })]],
+  ["For a product: silicon-anode NMC, the only chemistry that roughly doubles range at the same mass. A realistic target is a power-balanced cell of about 350 to 400 watt-hours per kilogram.",
+   [RR(660, 140, 540, 350, { c: 'g', fill: .05, q: 16, w: 2.2 }), RR(692, 182, 50, 64, { c: 'g', q: 6, fill: .12, w: 2.2 }), R(706, 171, 22, 11, { c: 'g', single: true, w: 1.8 }), T(764, 208, 'product', { c: 'g', s: 38, b: 1 }), T(764, 240, 'the path to range', { c: 'd', s: 20 }),
+    BUL(690, 305, ['silicon-anode NMC', '≈ 2× range at the same mass', 'target: a power-balanced cell', 'of about 350–400 Wh/kg'], { s: 24, gap: 44, mc: 'g' })]],
+  ["Keep an eye on lithium-sulfur and solid-state. And avoid LFP for propulsion.",
+   [T(80, 558, 'also:', { c: 'd', s: 22 }), CHIP(140, 551, 'watch Li-S and solid-state', { c: 'b', s: 20 }), CHIP(460, 551, 'avoid LFP for propulsion', { c: 'p', s: 20 })]]
+ ]),
+ CARD(5),
+ S('The wing is the battery', [
+  ["Step four, a wilder idea. What if the battery is the wing? Pack cylindrical cells into the wing box, bond them with potting, and let the cells work like a honeycomb core that carries load.",
+   [H('step 4: the wing is the battery'), WINGBOX(140, 300, 1000),
+    T(520, 160, 'skin', { c: 'd', s: 19, a: 'm' }), LEAD(520, 168, 520, 206), T(290, 398, 'front spar', { c: 'd', s: 19, a: 'm' }), LEAD(290, 378, 290, 344), T(740, 378, 'rear spar', { c: 'd', s: 19, a: 'm' }), LEAD(740, 358, 740, 324),
+    T(640, 466, 'cells + potting = a load-carrying honeycomb core', { c: 'y', s: 30, a: 'm', b: 1 })]],
+  ["Space isn't the problem. The wing box holds about 6.4 cubic meters, and 360 kilowatt-hours needs only 17 to 20 percent of it. Mass is the real constraint.",
+   [T(80, 538, 'volume', { c: 'd', s: 19 }), R(80, 552, 480, 30, { c: 'd', single: true, w: 1.6 }), R(80, 552, 96, 30, { c: 'g', tint: .45, single: true, w: 1.4 }), CK(588, 565),
+    T(80, 616, '6.4 m³ wing box · 360 kWh uses only 17–20%', { s: 21 })]],
+  ["Dropping the separate pack structure gives a structural pack of about 1,753 kilograms, against 2,057 for a conventional pack.",
+   [T(680, 538, 'pack mass', { c: 'd', s: 19 }), R(680, 552, 411, 26, { c: 'd', tint: .2, single: true, w: 1.4 }), T(690, 571, 'conventional · 2,057 kg', { s: 17 }),
+    R(680, 590, 351, 26, { c: 'g', tint: .3, single: true, w: 1.6 }), T(690, 609, 'structural · ≈ 1,753 kg', { s: 17, b: 1 })]]
+ ]),
+ S('Where to put the cells', [
+  ["But where in the wing? This is a strut-braced wing. The strut meets the wing about 6.5 meters out, and the peak bending moment, about 397 kilonewton-meters, sits right at the strut.",
+   [H('where in the wing?'), X1FRONT(170, 450, 58, { half: true, props: false, tail: false }), T(420, 336, 'strut', { c: 'd', s: 20 }),
+    L(237, 590, 1107, 590, { c: 'd', single: true, w: 1.6 }), P('M237 588 L547 468 Q 760 560 1107 590 L237 590 Z', { c: 'o', w: 2.8, tint: .14 }),
+    L(547, 244, 547, 468, { c: 'p', dash: '4 5', single: true, w: 1.4 }), DOT(547, 468, 5, { c: 'p' }), T(562, 462, 'peak ≈ 397 kNm, at the strut', { c: 'p', s: 22, b: 1 }), T(1107, 616, 'wing bending moment', { c: 'o', s: 19, a: 'e' })]],
+  ["Cells inboard of the strut give no bending relief at all, because that peak is set by the loads outboard of it.",
+   [HATCH(237, 221, 310, 20, { c: 'd', op: .7, gap: 12 }), T(392, 200, 'inboard: no relief', { c: 'd', s: 22, a: 'm', b: 1 })]],
+  ["Cells outboard of the strut cut the wing moment by a third, and strut tension by 29 percent. But on landing, strut compression nearly triples, roll inertia more than doubles, and the cells are more exposed in a crash.",
+   [HATCH(547, 219, 560, 22, { c: 'g', op: .8, gap: 12 }), T(827, 178, 'outboard: −33% wing moment', { c: 'g', s: 22, a: 'm', b: 1 }), T(827, 203, 'strut tension −29%', { c: 'g', s: 18, a: 'm' }),
+    BUL(720, 316, ['landing: strut load ≈ ×3', 'roll inertia +113%', 'more exposed in a crash'], { marker: 'cross', c: 'p', s: 22, gap: 38 })]]
+ ]),
+ S('The beam model', [
+  ["Here's the beam model behind it: shear, bending moment, and where the battery mass sits, for each of five placements.",
+   [H('the beam model'), IMG(80, 132, 532, 424, 'assets/pack_moment_dark.png', { cap: 'study output · bending moment, five battery placements' }),
+    T(680, 200, 'five placements, one beam model', { s: 28, b: 1 }), T(680, 238, 'half-wing, strut at 6.5 m, Schrenk lift', { c: 'd', s: 20 }), T(680, 266, 'loads: +3.75 g, −1.5 g, 3 g landing', { c: 'd', s: 20 })]],
+  ["Net savings land between about 257 and 377 kilograms, 2 to 3 percent of max weight. That's roughly 10 to 15 percent more energy.",
+   [STAT(680, 410, '257–377', 'kg', 'net mass saving, by placement', { c: 'g', s: 64 }), T(680, 506, '≈ 2–3% of max weight', { s: 24 }), T(680, 544, '≈ +10–15% energy', { c: 'o', s: 26, b: 1 })]]
+ ]),
+ S('The glue', [
+  ["The surprise was the glue. Peak shear in the cell core is about 0.5 to 1.5 megapascals. Structural adhesive on bare or primed metal cans is good for 2.4 to 3.8 at design level. Plenty of margin.",
+   [H('the surprise: the glue'), CYL(96, 196, 84, 172, { c: 'g', fill: .12 }), A(84, 342, 84, 236, { c: 'y', w: 2, h: 9 }), A(192, 236, 192, 342, { c: 'y', w: 2, h: 9 }), CK(138, 420), T(138, 462, 'primed can', { c: 'g', s: 21, a: 'm', b: 1 }), T(138, 486, 'bare metal', { c: 'd', s: 16, a: 'm' }),
+    L(520, 450, 1160, 450, { single: true, w: 1.6 }), [0, 1, 2, 3, 4].map(i => [L(520 + i * 160, 444, 520 + i * 160, 456, { single: true, w: 1.4 }), T(520 + i * 160, 478, String(i), { c: 'd', s: 14, a: 'm', mono: true })]), T(1176, 478, 'MPa', { c: 'd', s: 14, mono: true }),
+    R(600, 168, 160, 282, { c: 'y', tint: .07, single: true, w: 1, dash: '4 5' }), T(680, 160, 'core load 0.5–1.5', { c: 'y', s: 18, a: 'm' }),
+    R(520, 224, 384, 46, { c: 'g', tint: .25, w: 2, single: true }), R(904, 224, 224, 46, { c: 'g', dash: '5 5', single: true, w: 1.4 }), HATCH(904, 224, 224, 46, { c: 'g', op: .45 }),
+    T(532, 254, 'primed can: 2.4–3.8 (design)', { s: 19, b: 1 }), T(1128, 296, 'margin +60% to +600%', { c: 'g', s: 19, a: 'e' })]],
+  ["But normal cells come wrapped in plastic shrink film, and the film's own adhesive becomes the weak link: about 0.5 at design level. With wrapped cells, every placement fails. So the cells must be unwrapped and primed.",
+   [CYL(270, 196, 84, 172, { c: 'p', fill: .12 }), HATCH(272, 200, 80, 170, { c: 'p', op: .5, gap: 11 }), XM(312, 420), T(312, 462, 'wrapped can', { c: 'p', s: 21, a: 'm', b: 1 }), T(312, 486, 'plastic shrink film', { c: 'd', s: 16, a: 'm' }),
+    R(520, 336, 80, 46, { c: 'p', tint: .3, w: 2, single: true }), T(612, 366, 'shrink-film adhesive: 0.5 (design)', { c: 'p', s: 19, b: 1 }), T(1128, 408, 'every placement fails', { c: 'p', s: 19, a: 'e' }),
+    HL(368, 570, 544), T(640, 570, 'so: unwrap the cells, and prime the cans', { c: 'y', s: 32, a: 'm', b: 1 })]]
+ ]),
+ S('Heat', [
+  ["Heat matters too. Takeoff and climb warm the pack by about 30 degrees, with almost no cooling in that time.",
+   [H('heat'), STAT(80, 228, '+30', 'K', 'pack warming in takeoff + climb, with almost no cooling', { c: 'o', s: 72 })]],
+  ["In cruise, a spread-out layout can shed its losses, about 18 kilowatts, passively through the wing skins. A single inboard block can only shed 13 to 14. Not enough.",
+   [[0, 1].map(i => { const x = 80 + i * 600, good = !i, c = good ? 'g' : 'p';
+     return [R(x, 360, 520, 64, { c: 'w', fill: .06, w: 2 }), good ? lin(0, 9, 9).map(j => E(x + 30 + j * 51, 392, 13, 13, { c, w: 1.8 })) : [0, 1, 2, 3, 4].map(j => E(x + 26 + j * 28, 392, 13, 13, { c, w: 1.8 })),
+       (good ? lin(0, 9, 9).map(j => x + 30 + j * 51) : [40, 82, 124].map(d => x + d)).map(hx => HEAT(hx, 350, 52)),
+       T(x, 470, good ? 'spread out' : 'one inboard block', { c, s: 26, b: 1 }), T(x, 502, good ? '≈ 18 kW shed through the skins' : 'only 13–14 kW: not enough', { c: 'd', s: 20 }), good ? CK(x + 500, 466) : XM(x + 500, 462)]; })]],
+  ["And a full-depth block gets too hot in the middle. So keep the stack about two cells deep, or add fins that carry the heat out to the skins.",
+   [HL(254, 584, 772), T(640, 584, 'keep it about two cells deep · add conduction fins', { c: 'y', s: 32, a: 'm', b: 1 })]]
+ ]),
+ S('Wing battery verdict', [
+  ["Our pick: spread the cells from the wing root out to the outboard motor pod, two tiers deep, bonded to primed cans, with fins to the skins. Net saving: about 250 to 300 kilograms.",
+   [H('wing battery: our pick'), HALFWING(200, 280, 48, { cells: [1.2, 7.8] }), T(222, 452, 'cells: root → outboard pod, 2 tiers deep', { c: 'g', s: 22 }),
+    STAT(960, 300, '250–300', 'kg', 'net saving, our pick', { c: 'y', s: 54 })]],
+  ["But be honest about the open issues: crashworthiness, venting a thermal runaway inside a wing, cell swelling, cells you can't replace one by one, flutter, and certification. No aircraft has flown with this.",
+   [T(80, 512, 'open issues', { c: 'd', s: 20 }), chips(80, 548, ['crash', 'runaway venting', 'cell swelling', 'repair', 'flutter', 'certification'], { c: 'p', s: 18 }),
+    T(80, 616, 'no aircraft has flown with this yet', { c: 'p', s: 30, b: 1 })]]
+ ]),
+ CARD(6),
+ S('A small front wing?', [
+  ["Step five: aerodynamics. Could a small front wing make the X1 more efficient? A front wing is called a canard, or a foreplane.",
+   [H('step 5: a small front wing?'), X1TOP(420, 390, 10.5, { fore: 6, fx: 3, forec: 'v' }), T(110, 604, 'foreplane = canard', { c: 'v', s: 26, b: 1 }), LEAD(200, 584, 336, 420, { c: 'v' })]],
+  ["Our quick tool is AVL, a vortex-lattice method. It models the lifting surfaces only: no fuselage, no viscosity, no real stall. So stall is estimated when the first strip of wing reaches an assumed lift limit.",
+   [RR(700, 150, 500, 420, { c: 'y', fill: .04, q: 16, w: 2 }), T(728, 202, 'AVL', { c: 'y', s: 40, b: 1 }), T(812, 202, 'vortex-lattice method', { c: 'd', s: 21 }),
+    GRID(728, 232, 440, 66, 22, { c: 'y', op: .7 }), T(948, 324, 'lifting surfaces as panels', { c: 'd', s: 17, a: 'm' }),
+    BUL(728, 380, ['lifting surfaces only', 'no fuselage, no viscosity', 'no real stall'], { marker: 'dash', s: 24, gap: 40 }), T(728, 522, 'stall ≈ first strip reaching an assumed clmax', { c: 'd', s: 18 })]]
+ ]),
+ S('Four layouts', [
+  ["We tried four layouts. A is the baseline, with its T-tail.",
+   [H('four layouts'), X1TOP(190, 312, 6.4, {}), T(190, 172, 'A', { c: 'y', s: 46, a: 'm', b: 1 }), T(190, 458, 'baseline T-tail', { s: 23, a: 'm' })]],
+  ["B is a Piaggio P.180-style three-surface layout: a small foreplane, plus a tail shrunk to 60 percent.",
+   [X1TOP(490, 312, 6.4, { fore: 3.5, fx: 4.5, tail: .6, forec: 'v', tailc: 'b' }), T(490, 172, 'B', { c: 'y', s: 46, a: 'm', b: 1 }), T(490, 458, 'three surfaces', { s: 23, a: 'm' }), T(490, 486, '(P.180 style)', { c: 'd', s: 18, a: 'm' })]],
+  ["C is the literal version: a foreplane replaces the tail completely.",
+   [X1TOP(790, 312, 6.4, { fore: 10, fx: 3.8, tail: 0, forec: 'v' }), T(790, 172, 'C', { c: 'y', s: 46, a: 'm', b: 1 }), T(790, 458, 'foreplane, no tail', { s: 23, a: 'm' })]],
+  ["And B-opt is the best B we found in a sweep: a 4 square meter foreplane, 7 meters back, with the tail cut to 4.8 square meters.",
+   [X1TOP(1090, 312, 6.4, { fore: 4, fx: 7, tail: .4, forec: 'v', tailc: 'b' }), T(1090, 172, 'B-opt', { c: 'y', s: 46, a: 'm', b: 1 }), T(1090, 458, 'best B from a sweep', { s: 23, a: 'm' }), T(1090, 486, 'fore 4 m² · tail 4.8 m²', { c: 'd', s: 15, a: 'm', mono: true })]],
+  ["To compare them fairly, each one gets a 15 percent static margin. Static margin is how far the balance point sits ahead of the aerodynamic neutral point. Positive means the airplane naturally returns to level flight. And every layout is trimmed at the same cruise lift.",
+   [L(120, 590, 620, 590, { c: 'd', single: true, w: 1.6 }), CG(300, 590), P('M470 576 L481 594 L459 594 Z', { c: 'b', tint: .5, w: 2 }), DIM(300, 556, 470, 556), T(385, 546, 'static margin 15%', { c: 'y', s: 18, a: 'm', b: 1 }),
+    T(300, 628, 'balance point (CG)', { s: 17, a: 'm' }), T(470, 628, 'neutral point', { c: 'b', s: 17, a: 'm' }),
+    T(700, 568, 'fair test, every layout:', { c: 'd', s: 20 }), T(700, 604, '15% static margin · trimmed at cruise CL 0.631', { c: 'y', s: 24, b: 1 }), T(700, 634, 'margin > 0 → it returns to level by itself', { c: 'd', s: 18 })]]
+ ]),
+ S('Layout C: the canard', [
+  ["Layout C first. Left at the same balance point, it's unstable, with a static margin of minus 17 percent. It looks 3 to 4 percent more efficient, but only with a computer actively flying it, and it shows a deep-stall trap.",
+   [H('layout C: canard instead of tail'), X1TOP(240, 380, 8.5, { tail: 0, fore: 10, fx: 3.8, forec: 'v' }),
+    T(460, 168, 'as drawn, same balance point', { c: 'd', s: 20 }), STAT(460, 238, '−17%', '', 'static margin: unstable', { c: 'p', s: 56 }),
+    T(720, 216, 'L/D +3–4%,', { s: 22 }), T(720, 244, 'only with active stability', { c: 'd', s: 20 }), T(720, 272, 'deep-stall trap signature', { c: 'p', s: 20 })]],
+  ["Make it stable, and it falls apart. The smallest workable foreplane is 10 square meters, and every workable size loses 13.6 to 16.4 percent of range.",
+   [T(460, 338, 'made stable', { c: 'y', s: 24, b: 1 }), T(460, 374, 'smallest workable foreplane: 10 m²', { s: 22 }), T(460, 410, 'every workable size: range −13.6% to −16.4%', { c: 'p', s: 22, b: 1 })]],
+  ["Why? Deleting the tail saves about 5.3 percent. But trimming with a front wing ruins the lift distribution: span efficiency falls from 0.95 to 0.52, and that costs about 17.8 percent. Net: about minus 13.5.",
+   [L(470, 500, 860, 500, { c: 'd', single: true, w: 1.4 }), T(462, 505, '0', { c: 'd', s: 13, a: 'e', mono: true }),
+    R(490, 468, 90, 32, { c: 'g', tint: .3, w: 2, single: true }), T(535, 458, '+5.3%', { c: 'g', s: 20, a: 'm', b: 1 }), L(580, 468, 610, 468, { c: 'd', dash: '3 4', single: true, w: 1 }),
+    R(610, 468, 90, 107, { c: 'p', tint: .3, w: 2, single: true }), T(655, 598, '−17.8%', { c: 'p', s: 20, a: 'm', b: 1 }), L(700, 575, 730, 575, { c: 'd', dash: '3 4', single: true, w: 1 }),
+    R(730, 500, 90, 81, { c: 'y', tint: .3, w: 2, single: true }), T(775, 604, '= −13.5%', { c: 'y', s: 20, a: 'm', b: 1 }),
+    T(535, 636, 'drop the tail', { c: 'd', s: 15, a: 'm' }), T(655, 636, 'trim drag', { c: 'd', s: 15, a: 'm' }), T(775, 636, 'net', { c: 'd', s: 15, a: 'm' }),
+    T(900, 530, 'span efficiency', { c: 'd', s: 18 }), T(900, 562, '0.95 → 0.52', { c: 'p', s: 28, b: 1 })]]
+ ]),
+ S('B → B-opt', [
+  ["Layout B, as first drawn, was slightly better: L over D 21.6, versus 21.3. But its wing stalled before the foreplane. That's unsafe. You want the front wing to stall first, so the nose drops and the airplane recovers.",
+   [H('layout B → B-opt'), T(80, 165, 'B, as first drawn', { c: 'd', s: 20 }), T(80, 205, 'L/D 21.6 vs 21.3', { s: 30, b: 1 }), T(80, 243, 'but the wing stalls before the foreplane', { c: 'p', s: 22 }), XM(500, 235, { k: 9 }),
+    X1SIDE(800, 268, 15, { ground: false, w: 1.8 }), A(806, 188, 790, 246, { c: 'g', bend: -14, w: 2.4 }), T(800, 310, 'safe: the foreplane stalls first → nose drops', { c: 'g', s: 20 })]],
+  ["So we swept foreplane size and position. Bigger foreplanes lost range, up to 7.5 percent. The best was small: 4 square meters, 7 meters back, plus a tail shrunk to 4.8 square meters. That's B-opt.",
+   [X1TOP(1010, 478, 7.2, { fore: 4, fx: 7, tail: .4, forec: 'v', tailc: 'b' }),
+    T(80, 340, 'the sweep: foreplane 4–12 m² × position 2.5–7 m', { c: 'd', s: 20 }), T(80, 380, 'bigger foreplanes lose range, up to −7.5%', { s: 24 }), T(80, 424, 'best: 4 m² at x = 7 m, tail cut to 4.8 m²', { c: 'g', s: 26, b: 1 })]],
+  ["B-opt versus the baseline, both at 15 percent static margin: L over D 21.60, versus 21.28. A gain of 1.5 percent.",
+   [STAT(80, 540, '+1.5%', '', 'B-opt vs baseline, both at 15% static margin: L/D 21.60 vs 21.28', { c: 'y', s: 64 })]]
+ ]),
+ S('B-opt: the fine print', [
+  ["Good news first. B-opt's foreplane does stall first, the safe behavior. The cost is a higher stall speed: 45.1 meters per second, versus 43.0.",
+   [H('B-opt: the fine print'), RR(80, 140, 350, 340, { c: 'd', fill: .04, q: 14, w: 1.8, single: true }), T(104, 182, 'stall', { c: 'y', s: 26, b: 1 }), CK(112, 216, { k: .8 }), T(132, 224, 'foreplane stalls first: safe', { c: 'g', s: 19 }),
+    T(104, 274, 'A', { c: 'd', s: 15, mono: true }), R(104, 282, 258, 30, { c: 'w', tint: .18, single: true, w: 1.6 }), T(372, 304, '43.0', { s: 20, b: 1 }),
+    T(104, 344, 'B-opt', { c: 'd', s: 15, mono: true }), R(104, 352, 271, 30, { c: 'v', tint: .25, single: true, w: 1.6 }), T(385, 374, '45.1', { c: 'v', s: 20, b: 1 }), T(104, 436, 'stall speed, m/s', { c: 'd', s: 18 })]],
+  ["The weak point is takeoff rotation. With an elevator only on the small tail, the nose wheel doesn't lift until about 54 meters per second, against a target of 49.6. Every fix, like a foreplane flap or a bigger tail, eats into that 1.5 percent.",
+   [RR(465, 140, 350, 340, { c: 'd', fill: .04, q: 14, w: 1.8, single: true }), T(489, 182, 'takeoff rotation', { c: 'y', s: 26, b: 1 }), XM(497, 216, { k: 8 }), T(517, 224, 'the nose lifts late', { c: 'p', s: 19 }),
+    L(495, 330, 785, 330, { single: true, w: 1.6 }), [45, 50, 55].map(v => [L(495 + (v - 44) * 24.2, 324, 495 + (v - 44) * 24.2, 336, { single: true, w: 1.4 }), T(495 + (v - 44) * 24.2, 356, String(v), { c: 'd', s: 14, a: 'm', mono: true })]),
+    L(630, 300, 630, 330, { c: 'g', w: 2.6, single: true }), T(630, 290, 'target 49.6', { c: 'g', s: 17, a: 'm' }), L(737, 300, 737, 330, { c: 'p', w: 2.6, single: true }), T(737, 290, '≈ 54', { c: 'p', s: 19, a: 'm', b: 1 }), HATCH(630, 310, 107, 20, { c: 'p', op: .5, gap: 10 }),
+    T(489, 404, 'm/s · every fix (a foreplane flap,', { c: 'd', s: 17 }), T(489, 428, 'a bigger tail) eats into the 1.5%', { c: 'd', s: 17 })]],
+  ["Engine-out handling is fine. With an outboard motor out, it needs only 8.8 degrees of rudder, versus 11.1 for the baseline. And climb is unchanged.",
+   [RR(850, 140, 350, 340, { c: 'd', fill: .04, q: 14, w: 1.8, single: true }), T(874, 182, 'engine out', { c: 'y', s: 26, b: 1 }), CK(882, 216, { k: .8 }), T(902, 224, 'needs less rudder', { c: 'g', s: 19 }),
+    L(1149, 258, 1149, 396, { c: 'd', dash: '4 5', single: true, w: 1.4 }), T(1149, 250, 'limit 25°', { c: 'd', s: 14, a: 'm', mono: true }),
+    T(874, 274, 'A', { c: 'd', s: 15, mono: true }), R(874, 282, 122, 30, { c: 'w', tint: .18, single: true, w: 1.6 }), T(1006, 304, '11.1°', { s: 20, b: 1 }),
+    T(874, 344, 'B-opt', { c: 'd', s: 15, mono: true }), R(874, 352, 97, 30, { c: 'v', tint: .25, single: true, w: 1.6 }), T(981, 374, '8.8°', { c: 'v', s: 20, b: 1 }),
+    CK(882, 428, { k: .8 }), T(902, 436, 'climb unchanged', { c: 'g', s: 19 })]],
+  ["AVL's verdict: a canard replacing the tail is clearly worse. A small foreplane plus a smaller tail is a small, fragile gain, inside the uncertainty of our geometry.",
+   [RR(80, 516, 1120, 108, { c: 'y', tint: .06, q: 16, w: 2 }), T(640, 556, "AVL's verdict", { c: 'd', s: 20, a: 'm' }), T(640, 598, 'C: clearly worse  ·  B-opt: a small, fragile gain', { c: 'y', s: 32, a: 'm', b: 1 })]]
+ ]),
+ CARD(7),
+ S('CFD: the real flow', [
+  ["AVL is fast, but it can't see the fuselage, the motor pods, the struts, viscosity, or real stall. So next: CFD, computational fluid dynamics. A full simulation of the air flowing around the whole airplane.",
+   [H('step 6: CFD'), T(80, 165, "AVL can't see:", { s: 28, b: 1 }), BUL(80, 215, ['the fuselage', 'the motor pods', 'the struts', 'viscosity', 'real stall'], { marker: 'cross', s: 24, gap: 42 }),
+    FLOW(860, 320, 70, 8, { seeds: lin(-1.7, 1.7, 13), x0: 470, x1: 1225 }),
+    T(860, 520, 'CFD: computational fluid dynamics', { c: 'b', s: 26, a: 'm', b: 1 }), T(860, 552, 'simulate the air itself, around the whole airplane', { c: 'd', s: 20, a: 'm' })]],
+  ["We used OpenFOAM, solving the steady RANS equations with the k-omega SST turbulence model, at 80 meters per second, at 3,000-meter conditions. That's a Reynolds number of about 8.4 million.",
+   [RR(80, 436, 440, 196, { c: 'b', fill: .04, q: 12, w: 1.8, single: true }),
+    [['solver', 'OpenFOAM · steady RANS'], ['turbulence', 'k-ω SST'], ['flow', '80 m/s @ 3,000 m'], ['Reynolds', '≈ 8.4 million']].map(([k, v], i) => [T(100, 476 + i * 40, k, { c: 'd', s: 14, mono: true }), T(500, 478 + i * 40, v, { s: 22, a: 'e' })])]]
+ ]),
+ S('Setting up the CFD', [
+  ["To save memory, we simulate only half the airplane, with a symmetry plane down the middle. And angle of attack is set by tilting the incoming air, so one mesh serves every angle.",
+   [H('setting up the CFD'), X1TOP(300, 360, 8, {}), GHOST(150, 363, 300, 140), L(150, 360, 470, 360, { c: 'p', dash: '8 6', single: true, w: 2 }), T(476, 366, 'symmetry plane', { c: 'p', s: 20 }),
+    T(300, 560, 'simulate one half, mirror the other', { s: 22, a: 'm' }),
+    FOIL(930, 250, 240, { w: 2.6 }), [0, 1, 2].map(i => A(650, 236 + i * 30, 790, 216 + i * 30, { c: 'b', w: 2.4 })), P('M700 190 Q 714 212 708 238', { c: 'y', w: 1.8 }), T(718, 214, 'α', { c: 'y', s: 22, b: 1 }),
+    T(930, 372, 'tilt the incoming air, not the mesh', { c: 'b', s: 22, a: 'm' }), T(930, 400, 'one mesh serves every angle', { c: 'd', s: 19, a: 'm' })]],
+  ["The space around the airplane is chopped into small cells. That's the mesh. A coarse mesh had about 1.1 million cells. A medium mesh, about 2.3 million. Finer meshes are more accurate, but slower.",
+   [T(640, 444, 'the mesh: space chopped into cells', { c: 'y', s: 24, b: 1 }),
+    MESH(640, 462, 240, 150, 30, { c: 'g' }), FOIL(760, 540, 92, { w: 2, fill: .2 }), MESH(940, 462, 240, 150, 15, { c: 'g', op: .6 }), FOIL(1060, 540, 92, { w: 2, fill: .2 }),
+    T(760, 642, 'coarse ≈ 1.1 M cells', { s: 19, a: 'm' }), T(1060, 642, 'medium ≈ 2.3 M cells', { s: 19, a: 'm' })]]
+ ]),
+ S('Running it', [
+  ["Each case ran on 6 cores, one at a time, because memory was limited to 15 gigabytes. 1,500 iterations per case, in an overnight queue.",
+   [H('running it'), LAPTOP(130, 160, 420), L(166, 380, 520, 380, { c: 'd', single: true, w: 1.2 }), L(166, 380, 166, 196, { c: 'd', single: true, w: 1.2 }), T(174, 210, 'residuals', { c: 'd', s: 12, mono: true }),
+    [['b', 204], ['g', 222], ['o', 240]].map(([c, y0]) => P(`M170 ${y0} C 230 ${y0 + 70}, 280 ${y0 + 92}, 330 ${y0 + 104} S 450 ${y0 + 122}, 516 ${y0 + 128}`, { c, w: 2, dur: .5 })), T(516, 398, '1,500 iterations', { c: 'd', s: 12, a: 'e', mono: true }),
+    T(660, 196, '6 cores · 15 GB of memory', { c: 'g', s: 30, b: 1 }), T(660, 234, 'one case at a time · 1,500 iterations each', { c: 'd', s: 20 }), MOON(674, 272, 15), T(700, 279, 'overnight queue', { c: 'y', s: 21 })]],
+  ["One snag: OpenFOAM's built-in force tools crashed in this build. So we wrote our own script, forces dot py, that adds up pressure and skin friction from the saved flow fields.",
+   [RR(80, 486, 560, 132, { c: 'd', fill: .07, q: 10, w: 1.6, single: true }), T(102, 522, '$ python forces.py', { c: 'g', s: 16, mono: true }), T(102, 554, '# integrates pressure + wall shear', { c: 'd', s: 14, mono: true }), T(102, 582, '# from the saved flow fields', { c: 'd', s: 14, mono: true }),
+    T(80, 470, "OpenFOAM's built-in force tool crashed → we wrote our own", { c: 'p', s: 19 })]],
+  ["We ran the baseline, B-opt, and the 10 square meter canard, C10, at angles from 0 to 16 degrees, with the control surfaces left at zero. So, untrimmed.",
+   [RUNS(700, 372)]]
+ ]),
+ CARD(8),
+ S('First CFD results', [
+  ["The first coarse-mesh results were a shock. L over D around 13, instead of AVL's 21. And the wing was separating early, at just 4 to 8 degrees. Separation means the air peels off the surface instead of following it.",
+   [H('first results: a shock'), T(80, 160, 'cruise L/D, layout A', { c: 'd', s: 20 }), R(80, 175, 426, 40, { c: 'y', tint: .22, w: 2, single: true }), T(518, 204, 'AVL 21.3', { c: 'y', s: 22, b: 1 }),
+    R(80, 235, 258, 40, { c: 'b', tint: .22, w: 2, single: true }), T(350, 264, 'CFD 12.9', { c: 'b', s: 22, b: 1 }),
+    T(80, 334, 'and the wing separated early, at α 4–8°', { s: 22 }), T(80, 366, 'separation: the air peels off the surface', { c: 'd', s: 19 }),
+    IMG(660, 140, 540, 304, 'assets/slice_A_a8.jpg', { frame: true, round: 10, cap: 'study output · A, α 8°, coarse mesh · velocity' }), T(1196, 124, 'separated wake', { c: 'p', s: 19, a: 'e', b: 1 }), A(1110, 132, 990, 252, { c: 'p', bend: 16, w: 2.2 })]],
+  ["So: was the airplane bad, or was the mesh bad? We checked by refining it.",
+   [HL(406, 584, 468), T(640, 584, 'bad airplane, or bad mesh?', { c: 'y', s: 44, a: 'm', b: 1 })]]
+ ]),
+ S('The mesh check', [
+  ["Here's the baseline at 8 degrees. Red marks reversed flow on the upper wing. On the coarse mesh, 47 percent of the wing. On the medium mesh, just 10 percent.",
+   [H('mesh check: A at α 8°'), T(645, 140, 'coarse · 1.1 M cells', { c: 'd', s: 15, a: 'm', mono: true }), IMG(470, 150, 350, 250, 'assets/sep_coarse_dark.png'),
+    T(1025, 140, 'medium · 2.3 M cells', { c: 'd', s: 15, a: 'm', mono: true }), IMG(850, 150, 350, 251, 'assets/sep_medium_dark.png'),
+    STAT(645, 470, '47%', '', 'of the upper wing reversed', { c: 'p', s: 56, a: 'm' }), STAT(1025, 470, '10%', '', 'of the upper wing reversed', { c: 'g', s: 56, a: 'm' }),
+    T(470, 600, 'study output · upper-surface reversed wall shear, in red', { c: 'd', s: 14, mono: true })]],
+  ["Lift rose from 0.915 to 1.128. Drag fell 39 percent. And L over D doubled, from 6.2 to 12.5. So most of that early separation was a mesh error, not real physics.",
+   [T(80, 180, 'refining the mesh:', { c: 'd', s: 20 }), [['CL', '0.915 → 1.128', 'w'], ['CD', '−39%', 'w'], ['L/D', '6.2 → 12.5', 'g']].map(([k, v, c], i) => [T(80, 226 + i * 42, k, { c: 'd', s: 16, mono: true }), T(140, 228 + i * 42, v, { c, s: 26, b: c === 'g' })]),
+    T(80, 384, 'mostly a mesh error,', { c: 'y', s: 30, b: 1 }), T(80, 418, 'not real physics', { c: 'y', s: 30, b: 1 })]],
+  ["Drag still isn't fully converged, so treat the absolute numbers as conservative.",
+   [T(80, 474, 'drag is not fully converged yet:', { c: 'd', s: 19 }), T(80, 500, 'absolute numbers are conservative', { c: 'd', s: 19 })]]
+ ]),
+ S('Corrected efficiency', [
+  ["Corrected for the medium mesh, cruise L over D is about 15.0 for the baseline, and 14.9 for B-opt. Versus about 21 in AVL.",
+   [H('corrected cruise L/D'), [5, 10, 15, 20].map(v => [L(150, 560 - v * 16, 670, 560 - v * 16, { c: 'f', dash: '2 7', single: true, w: 1 }), T(140, 565 - v * 16, String(v), { c: 'd', s: 13, a: 'e', mono: true })]), L(150, 560, 670, 560, { single: true, w: 1.8 }),
+    [[170, '21.28', 'y', 'A'], [275, '21.60', 'y', 'B-opt'], [450, '15.0', 'b', 'A'], [555, '14.9', 'b', 'B-opt']].map(([x, v, c, n]) => [R(x, 560 - v * 16, 90, v * 16, { c, tint: .22, w: 2, single: true }), T(x + 45, 548 - v * 16, v, { c, s: 22, a: 'm', b: 1 }), T(x + 45, 584, n, { c: 'd', s: 15, a: 'm', mono: true })]),
+    T(267, 618, 'AVL', { c: 'y', s: 24, a: 'm', b: 1 }), T(547, 618, 'CFD, medium-corrected', { c: 'b', s: 21, a: 'm', b: 1 })]],
+  ["CFD can't tell A and B-opt apart. So B-opt's 1.5 percent gain is neither confirmed nor refuted.",
+   [T(760, 210, 'A ≈ B-opt', { c: 'y', s: 44, b: 1 }), T(760, 250, 'CFD cannot tell them apart:', { s: 22 }), T(760, 280, "B-opt's +1.5% is neither confirmed nor refuted", { c: 'd', s: 18 })]],
+  ["Why 15, and not 21? Partly the mesh. But also real interference drag that AVL's build-up misses. At zero degrees, the struts add about 63 drag counts, the pods 75, and the fuselage 62. A drag count is one ten-thousandth of drag coefficient.",
+   [T(760, 360, 'drag that AVL misses, at α 0', { s: 22, b: 1 }), [[0, 63, 'p', 'struts 63'], [63, 75, 'o', 'pods 75'], [138, 62, 'v', 'fuselage 62']].map(([a, n, c, s]) => [R(760 + a * 2, 378, n * 2, 40, { c, tint: .3, w: 1.8, single: true }), T(760 + a * 2 + n, 444, s, { c, s: 18, a: 'm', b: 1 })]),
+    T(760, 488, 'drag counts · 1 count = 0.0001 CD', { c: 'd', s: 14, mono: true }), T(760, 528, 'plus a mesh that is not converged yet', { c: 'd', s: 19 })]]
+ ]),
+ S('Pressure picture', [
+  ["Here's the surface pressure on the baseline at 8 degrees, on the coarse mesh. Blue is suction, low pressure. That's where the lift comes from.",
+   [H('surface pressure, A at α 8°'), IMG(120, 130, 820, 505, 'assets/cp_iso_keyed.png'), T(1196, 300, 'blue = suction', { c: 'b', s: 28, a: 'e', b: 1 }), T(1196, 330, "that's where the lift comes from", { c: 'd', s: 18, a: 'e' }),
+    A(1040, 342, 800, 430, { c: 'b', bend: -24, w: 2.2 }), T(1000, 536, 'pressure coefficient Cp', { c: 'd', s: 14, mono: true }), GRAD(1000, 548, 196, 14, 'cpgrad'),
+    T(1000, 584, '−1.5 suction', { c: 'd', s: 13, mono: true }), T(1196, 584, '+1 pressure', { c: 'd', s: 13, a: 'e', mono: true }), T(120, 650, 'study output · OpenFOAM, coarse mesh', { c: 'd', s: 14, mono: true })]]
+ ]),
+ S('Canards in CFD', [
+  ["And the canard? Untrimmed, C10 looks about 4 to 5 percent better than the baseline. But to trim, it has to deflect the foreplane, and AVL says that costs about 14 percent. Trimmed, it's not better.",
+   [H('the canard in CFD'), X1TOP(300, 290, 6.5, { tail: 0, fore: 10, fx: 3.8, forec: 'v' }),
+    T(80, 455, 'C10, untrimmed', { c: 'd', s: 20 }), T(330, 455, '+4–5%', { c: 'g', s: 26, b: 1 }), T(80, 497, 'trimming it costs', { c: 'd', s: 20 }), T(330, 497, '≈ −14% (AVL)', { c: 'p', s: 26, b: 1 }),
+    HL(80, 556, 336), T(80, 556, 'trimmed: not better', { c: 'y', s: 34, b: 1 })]],
+  ["CFD also confirms the foreplanes stall first, the safe order. But they lift less than AVL predicts. On B-opt, the foreplane's lift slope is only about a third of AVL's value.",
+   [IMG(660, 140, 540, 304, 'assets/slice_Bopt_a8.jpg', { frame: true, round: 10, cap: 'study output · B-opt, α 8°, coarse mesh · velocity' }), T(660, 124, 'foreplane, stalled', { c: 'v', s: 19, b: 1 }), A(780, 130, 862, 302, { c: 'v', bend: -14, w: 2.2 }),
+    CK(674, 506, { k: .8 }), T(694, 514, 'foreplanes stall first: the safe order', { c: 'g', s: 21 }), T(660, 552, "but they lift less: B-opt's slope ≈ 1/3 of AVL", { s: 21 })]],
+  ["By 12 degrees, all three layouts make nearly the same lift.",
+   [T(660, 600, 'α 12°: all three layouts, CL ≈ 1.03–1.06', { c: 'd', s: 19 })]]
+ ]),
+ S('Stability + the pods', [
+  ["On the medium mesh, the baseline looks more stable than the coarse mesh suggested: about 74 percent of AVL's stability slope. So our earlier warning, about moving the balance point forward, was probably too pessimistic. That isn't re-checked yet for B-opt and C10.",
+   [H('stability + the pods'), T(80, 158, 'stability slope dCm/dCL, vs AVL', { c: 'd', s: 19 }),
+    [[400, 'y', 'AVL 100%', 1], [240, 'b', 'coarse 60%', .55], [296, 'b', 'medium 74%', 1]].map(([w, c, s, op], i) => [R(80, 172 + i * 38, w, 26, { c, tint: .25 * op, w: 1.6, single: true, op }), T(92 + w, 192 + i * 38, s, { c, s: 18, b: op === 1, op })]),
+    T(640, 196, 'the baseline is more stable than the coarse mesh said', { s: 21 }), T(640, 232, 'earlier CG warning: probably too pessimistic', { c: 'g', s: 22, b: 1 }), T(640, 264, 'not re-checked yet for B-opt and C10', { c: 'd', s: 18 })]],
+  ["And the separation that remains sits just behind, and outboard of, the two places where the motor pods meet the wing.",
+   [HALFWING(200, 452, 50, { sep: true }), A(1110, 350, 1110, 430, { c: 'b', w: 2.4 }), T(1110, 340, 'flow', { c: 'b', s: 20, a: 'm' }),
+    T(640, 604, 'the separation left sits behind the pod–wing junctions', { c: 'p', s: 23, a: 'm' })]],
+  ["Pod drag barely changes with the mesh, so this may be a real feature of this pod placement. It's worth a closer look with a finer mesh.",
+   [T(640, 638, 'pod drag barely moves with the mesh → may be real → worth a fairing study', { c: 'y', s: 20, a: 'm', b: 1 })]]
+ ]),
+ CARD(9),
+ S('What we got wrong', [
+  ["Now the honest part: what we got wrong, and what we still don't know.",
+   [H('what we got wrong'), T(80, 152, 'the honest part', { c: 'd', s: 22 })]],
+  ["A parameter mix-up in OpenVSP made the motor pods in the first CAD export twice the intended diameter. We found it and fixed it. Measured on the CFD meshes, the pods are the right 0.8 meters, so the CFD used the correct geometry. We'd said otherwise earlier, and that was wrong.",
+   [OUT(shape(capsule(100, 316, 50, 40, 10, 70), 100, 316, 270, 30), { c: 'p', fill: .14, w: 2.4 }), XM(208, 270, { k: 16 }), T(208, 362, 'first CAD export: pods 2× too fat', { c: 'p', s: 20, a: 'm' }),
+    OUT(shape(capsule(420, 636, 25, 30, 6, 60), 420, 636, 270, 30), { c: 'g', fill: .14, w: 2.4 }), DIMY(654, 245, 295, '0.80 m', { mono: true }), T(528, 362, 'fixed: the CFD used 0.80 m pods', { c: 'g', s: 20, a: 'm' }),
+    T(800, 236, 'an OpenVSP parameter mix-up:', { c: 'd', s: 20 }), T(800, 268, 'FineRatio = length / radius', { s: 17, mono: true }), T(800, 310, 'we had said the CFD used the bad pods.', { c: 'd', s: 19 }), T(800, 336, 'that was wrong.', { c: 'y', s: 21, b: 1 })]],
+  ["The mesh isn't converged: drag still moves 16 to 39 percent per refinement. One canard case, at 16 degrees, diverged and wasn't re-run. And there are no propellers, no landing gear, and no trimmed CFD.",
+   [BUL(80, 438, ['mesh not converged: drag still moves 16–39% per refinement', 'one canard case (C10, α 16°) diverged, not re-run', 'no propellers, no landing gear, no trimmed CFD'], { marker: 'dash', mc: 'p', s: 24, gap: 44 })]],
+  ["And underneath it all: the geometry is estimated from photos, the masses are assumptions, and the battery and structure numbers use typical datasheet values, not test data.",
+   [HL(80, 606, 870), T(80, 606, 'underneath: photo-estimated geometry (area ±15%), assumed masses, datasheet values', { c: 'y', s: 22 })]]
+ ]),
+ CARD(10),
+ S('What a laptop told us', [
+  ["So, what can a laptop tell you about an electric airliner? Four things.",
+   [H('what a laptop told us'), T(80, 150, 'four things', { c: 'd', s: 22 })]],
+  ...[
+   ['1', 'battery', 'o', ['360 kWh ≈ 105–125 km', 'no reserve possible', 'Si-anode: product', 'NMC/NCA: demo'],
+    "One: the battery limits the mission. 360 kilowatt-hours gives about 105 to 125 kilometers with no reserve, and can't carry one. Silicon-anode cells are the product path."],
+   ['2', 'wing battery', 'g', ['≈ 250–380 kg saved', 'needs primed cans', 'long road to cert.'],
+    "Two: a structural wing battery could save roughly 250 to 380 kilograms. But it needs bare, primed cell cans, and a long road to certification."],
+   ['3', 'front wing', 'v', ['C: ≈ −14% range', 'B-opt: +1.5% (AVL)', 'tied in CFD', 'not worth it (yet)'],
+    "Three: a canard replacing the tail costs about 14 percent of range. A small foreplane plus a smaller tail gains 1.5 percent in AVL, and ties in CFD. On this evidence, not worth the complexity."],
+   ['4', 'CFD', 'b', ['L/D ≈ 15, not 21', 'interference drag', 'matters', 'watch pod junctions'],
+    "Four: real-world L over D is probably nearer 15 than 21. Interference drag matters, and the pod-wing junctions deserve design attention."]
+  ].map(([n, t, c, lines, say], i) => { const x = 80 + i * 285, y = 172, cx = x + 130;
+    const icon = [BATT(cx - 50, y + 40, 96, 48, .3, { c: 'o' }), [FOIL(cx - 12, y + 66, 150, { w: 2.2 }), [0, 1, 2, 3].map(j => E(cx - 52 + j * 22, y + 63, 7, 7, { c: 'g', w: 1.6 }))],
+      X1TOP(cx, y + 64, 2.5, { simple: true, fore: 6, fx: 3, forec: 'v', tail: 0 }), [FOIL(cx - 8, y + 66, 90, { aoa: 6, w: 2.2 }), STREAMS(cx, y + 66, 170)]][i];
+    return [say, [RR(x, y, 260, 430, { c, fill: .05, q: 16, w: 2.2 }), icon, T(x + 24, y + 172, n, { c, s: 46, b: 1 }), T(x + 64, y + 166, t, { c, s: 27, b: 1 }),
+      lines.map((l, k) => T(x + 24, y + 226 + k * 40, l, { s: 21 }))]]; })
+ ]),
+ S('Next steps', [
+  ["Next steps: a finer mesh and a proper convergence study. Medium-mesh runs at high angles for B-opt and C10. Trimmed CFD, with propeller slipstream. A fairing study for the pod junctions. And real tests of the cell-potting bond.",
+   [H('next steps'), ['a finer mesh, and a real convergence study', 'medium-mesh runs at high α for B-opt and C10', 'trimmed CFD, with propeller slipstream', 'a fairing study for the pod–wing junctions', 'real tests of the cell–potting bond'].map((s, k) => {
+     const y = 196 + k * 74; return [RR(96, y - 26, 32, 32, { c: 'y', q: 7, w: 2.2, single: true }), T(150, y, s, { s: 30 })]; }),
+    X1TOP(1072, 400, 4.2, { flip: true, simple: true, c: 'y' }), P('M720 612 C 840 604, 900 420, 1012 402', { c: 'd', dash: '3 9', w: 2 })]]
+ ]),
+ S('Wrap-up', [
+  ["One last reminder: everything here is an independent estimate, built from public data. It is not Heart Aerospace data. Thanks for watching.",
+   [X1SIDE(301, 372, 30, { pods: 'o' }), RR(170, 424, 940, 86, { c: 'p', tint: .07, q: 16, w: 2 }), T(640, 462, 'independent estimates from public data', { c: 'p', s: 28, a: 'm', b: 1 }), T(640, 494, 'not Heart Aerospace data', { c: 'd', s: 20, a: 'm' }),
+    T(640, 596, 'thanks for watching!', { c: 'y', s: 56, a: 'm', b: 1 })]]
+ ])
+];
+
+/* ---------- timeline ---------- */
+const beatDur = (t, d) => d || Math.max(3.5, t.split(/\s+/).length / 2.5 + 1.4);
+const BEATS = [];
+SCENES.forEach((s, si) => s.beats.forEach((b, bi) => BEATS.push({ si, bi, text: b.say, dur: beatDur(b.say, b.dur), onScreen: b.ops.filter(o => o.str).map(o => o.str) })));
+let acc = 0; BEATS.forEach(b => { b.start = acc; acc += b.dur; });
+const TOTAL = acc;
+const sceneStart = SCENES.map((_, si) => BEATS.findIndex(b => b.si === si));
+
+const $ = id => document.getElementById(id);
+const board = $('board'), inkG = $('ink'), mediaG = $('media'), chromeG = $('chrome');
+const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+SCENES.forEach((s, si) => {
+  const b = document.createElement('button');
+  b.className = 'chap'; b.textContent = `${String(s.ch).padStart(2, '0')} · ${CHAPTERS[s.ch - 1]}`; b.onclick = () => goTo(sceneStart[si]);
+  if (s.card || si === 0) $('chaps').appendChild(b);
+  if (si > 0 && s.card) { const t = document.createElement('div'); t.className = 'tick'; t.style.left = (BEATS[sceneStart[si]].start / TOTAL * 100) + '%'; $('bar').querySelector('.track').appendChild(t); }
+  const h = document.createElement('h3'); h.textContent = s.name; $('script').appendChild(h);
+  s.beats.forEach((bt, bi) => {
+    const p = document.createElement('p'), ts = document.createElement('span');
+    ts.className = 'ts'; ts.textContent = fmt(BEATS[sceneStart[si] + bi].start);
+    p.append(ts, bt.say); $('script').appendChild(p);
+  });
+});
+const chapEls = [...document.querySelectorAll('.chap')];
+
+let cur = 0, t = 0, playing = false, last = 0, voiceOn = false, spoken = false, caps = true, shownScene = -1;
+
+// chapter tracker, top right of every board
+function drawChrome(ch) {
+  const lbl = mk('text', { x: 1200, y: 48, 'text-anchor': 'end', 'font-size': 14, class: 'mono', 'letter-spacing': '.5' });
+  lbl.style.fill = 'var(--d)'; lbl.textContent = `${String(ch).padStart(2, '0')} / 10 · ${CHAPTERS[ch - 1]}`;
+  chromeG.appendChild(lbl);
+  for (let i = 0; i < 10; i++) {
+    const x = 1200 - (10 - i) * 19 + 5, ln = mk('line', { x1: x, y1: 62, x2: x + 13, y2: 62, 'stroke-linecap': 'round' });
+    ln.style.stroke = i < ch - 1 ? 'var(--d)' : i === ch - 1 ? 'var(--y)' : 'var(--f)'; ln.style.strokeWidth = 3;
+    chromeG.appendChild(ln);
+  }
+}
+
+function drawBoard(animate) {
+  const { si, bi, dur } = BEATS[cur];
+  inkG.replaceChildren(); mediaG.replaceChildren(); chromeG.replaceChildren();
+  const sc = SCENES[si], beats = sc.beats;
+  for (let k = 0; k <= bi; k++) {
+    const ops = beats[k].ops, live = animate && k === bi;
+    const total = ops.reduce((a, o) => a + o.dur * .8, 0), f = Math.min(1, (dur * .7) / (total || 1));
+    let at = .25;
+    ops.forEach((op, idx) => {
+      const els = op.build(rng(si * 9973 + k * 131 + idx * 17 + 1));
+      els.forEach(el => {
+        if (live) {
+          const cls = el.dataset.fade ? 'fade' : el.tagName === 'text' ? 'write' : 'draw';
+          el.classList.add(cls);
+          if (cls === 'fade') el.style.removeProperty('opacity');   // the keyframes fade it in to --op, at its turn
+          el.style.setProperty('--dl', at.toFixed(2) + 's');
+          el.style.setProperty('--du', (op.dur * f).toFixed(2) + 's');
+        }
+        (el.dataset.layer === 'media' ? mediaG : inkG).appendChild(el);
+      });
+      if (live) at += op.dur * .8 * f;
+    });
+  }
+  if (!sc.card) drawChrome(sc.ch);
+  if (si !== shownScene && animate) [mediaG, inkG, chromeG].forEach(g => g.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out' }));
+  shownScene = si;
+}
+function render(animate = true) {
+  drawBoard(animate);
+  $('cap').textContent = BEATS[cur].text;
+  const ch = SCENES[BEATS[cur].si].ch;
+  chapEls.forEach(c => c.classList.toggle('cur', c.textContent.startsWith(String(ch).padStart(2, '0') + ' ·')));
+  paintProgress();
+}
+function paintProgress() {
+  const b = BEATS[cur], now = b.start + Math.min(t, b.dur);
+  $('fill').style.width = (now / TOTAL * 100) + '%';
+  $('bar').setAttribute('aria-valuenow', Math.round(now / TOTAL * 100));
+  $('time').textContent = fmt(now) + ' / ' + fmt(TOTAL);
+}
+
+/* ---------- voice-over (browser speech) ---------- */
+const synth = window.speechSynthesis;
+let voice = null;
+function pickVoice() {
+  if (!synth) return;
+  const v = synth.getVoices();
+  voice = v.find(x => /en-US/i.test(x.lang) && /natural|online/i.test(x.name)) || v.find(x => /en-US/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null;
+}
+if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
+function speak() {
+  spoken = false;
+  if (!synth || !voiceOn) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(BEATS[cur].text);
+  if (voice) u.voice = voice;
+  u.onend = u.onerror = () => { spoken = true; };
+  synth.speak(u);
+}
+const stopSpeech = () => { if (synth) synth.cancel(); };
+
+/* ---------- transport ---------- */
+function goTo(i) {
+  cur = Math.max(0, Math.min(BEATS.length - 1, i)); t = 0;
+  render(true);
+  if (playing) speak(); else stopSpeech();
+}
+function next() {
+  if (cur >= BEATS.length - 1) { setPlaying(false); t = BEATS[cur].dur; paintProgress(); return; }
+  goTo(cur + 1);
+}
+function setPlaying(p) {
+  playing = p;
+  $('playLbl').textContent = p ? 'Pause' : 'Play';
+  $('play').setAttribute('aria-label', p ? 'Pause' : 'Play');
+  $('playIcon').innerHTML = p ? '<path d="M3 2h4v12H3zM9 2h4v12H9z"/>' : '<path d="M4 2l10 6-10 6z"/>';
+  if (p) {
+    if (cur === BEATS.length - 1 && t >= BEATS[cur].dur) goTo(0);
+    else if (t === 0) { render(true); speak(); }
+    else { if (voiceOn) t = 0; speak(); }
+    last = performance.now();
+  } else stopSpeech();
+}
+function loop(now) {
+  const dt = (now - last) / 1000; last = now;
+  if (playing) {
+    t += dt;
+    const d = BEATS[cur].dur;
+    if (voiceOn && synth) { if ((spoken && t > 1.2) || t > d * 2.2) next(); }
+    else if (t >= d) next();
+    paintProgress();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(n => { last = n; loop(n); });
+
+$('play').onclick = () => setPlaying(!playing);
+$('next').onclick = () => goTo(cur + 1);
+$('prev').onclick = () => goTo(t > 1.5 ? cur : cur - 1);
+$('bar').onclick = e => {
+  const r = e.currentTarget.getBoundingClientRect(), time = (e.clientX - r.left) / r.width * TOTAL;
+  let i = 0; while (i < BEATS.length - 1 && BEATS[i + 1].start <= time) i++;
+  goTo(i);
+};
+$('voice').onclick = () => {
+  voiceOn = !voiceOn; $('voice').setAttribute('aria-pressed', voiceOn);
+  if (!synth && voiceOn) $('cap').textContent = 'Voice-over is not available in this browser. Captions still play.';
+  if (playing) { t = 0; voiceOn ? speak() : stopSpeech(); }
+};
+$('cc').onclick = () => { caps = !caps; $('cc').setAttribute('aria-pressed', caps); $('cap').classList.toggle('off', !caps); };
+$('fs').onclick = () => {
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  else if ($('player').requestFullscreen) $('player').requestFullscreen().catch(() => {});
+};
+document.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('summary')) return;
+  const k = e.key;
+  if (k === ' ' || k === 'k' || k === 'K') { e.preventDefault(); setPlaying(!playing); }
+  else if (k === 'ArrowRight' || k === 'PageDown') { e.preventDefault(); goTo(cur + 1); }
+  else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); goTo(cur - 1); }
+  else if (k === 'f' || k === 'F') $('fs').click();
+  else if (k === 'c' || k === 'C') $('cc').click();
+  else if (k === 'v' || k === 'V') $('voice').click();
+});
+
+// opening frame: the title board, drawn and at rest; redraw once the fonts arrive so measured labels fit
+cur = 0; render(false);
+document.fonts && document.fonts.ready.then(() => { if (!playing) render(false); });
+
+/* ---------- frame-exact recording (?record) ---------- */
+if (new URLSearchParams(location.search).has('record')) {
+  document.documentElement.classList.add('rec');
+  window.__rec = {
+    beats: BEATS.map(b => ({ start: b.start, dur: b.dur, scene: b.si, sceneName: SCENES[b.si].name, text: b.text, onScreen: b.onScreen })),
+    total: TOTAL,
+    async ready() {
+      await Promise.all(['400 28px Kalam', '700 28px Kalam', '400 16px "JetBrains Mono"'].map(f => document.fonts.load(f)));
+      await document.fonts.ready;
+      await Promise.all([...IMGS, 'assets/board.png'].map(src => new Promise(res => { const i = new Image(); i.onload = i.onerror = res; i.src = src; })));
+      return document.fonts.check('700 28px Kalam') && document.fonts.check('400 16px "JetBrains Mono"');
+    },
+    // draw beat i with its animations paused at 0; returns when the last one ends (ms)
+    beat(i) {
+      setPlaying(false); cur = i; t = 0;
+      shownScene = BEATS[i].bi === 0 ? -1 : BEATS[i].si;   // the scene fade-in plays only on a scene's first beat, whatever was drawn before
+      drawBoard(true);
+      const an = document.getAnimations(); an.forEach(a => a.pause());
+      return Math.max(0, ...an.map(a => a.effect.getComputedTiming().endTime));
+    },
+    seek(s) { document.getAnimations().forEach(a => { a.currentTime = s * 1000; }); }
+  };
+}
+</script>
